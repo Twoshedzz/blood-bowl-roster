@@ -3,49 +3,6 @@ import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft } from 'lucide-react';
 
 const STARTING_TREASURY = 1000000;
 
-// Skills organized by category
-const SKILLS_BY_CATEGORY = {
-  A: ["Catch", "Diving Catch", "Diving Tackle", "Dodge", "Defensive", "Hit and Run", "Jump Up", "Leap", "Safe Pair of Hands", "Sidestep", "Sprint", "Sure Feet"],
-  D: ["Dirty Player", "Eye Gouge", "Fumblerooski", "Lethal Flight", "Lone Fouler", "Pile Driver", "Put the Boot In", "Quick Foul", "Saboteur", "Shadowing", "Sneaky Git", "Violent Innovator"],
-  G: ["Block", "Dauntless", "Fend", "Frenzy", "Kick", "Pro", "Steady Footing", "Strip Ball", "Sure Hands", "Tackle", "Taunt", "Wrestle"],
-  M: ["Big Hand", "Claws", "Disturbing Presence", "Extra Arms", "Foul Appearance", "Horns", "Iron Hard Skin", "Monstrous Mouth", "Prehensile Tail", "Tentacles", "Two Heads", "Very Long Legs"],
-  P: ["Accurate", "Cannoneer", "Cloud Burster", "Dump-off", "Give and Go", "Hail Mary Pass", "Leader", "Nerves of Steel", "On the Ball", "Pass", "Punt", "Safe Pass"],
-  S: ["Arm Bar", "Brawler", "Break Tackle", "Bullseye", "Grab", "Guard", "Juggernaut", "Mighty Blow", "Multiple Block", "Stand Firm", "Strong Arm", "Thick Skull"]
-};
-
-// Complete skill access for all 30 teams - prim = primary categories, sec = secondary categories
-const SKILL_ACCESS = {
-  "Amazon": {"Lino": {prim: "G", sec: "AS"}, "Thrower": {prim: "GP", sec: "AS"}, "Blitzer": {prim: "AG", sec: "S"}, "Blocker": {prim: "GS", sec: "A"}},
-  "Black Orc": {"Goblin": {prim: "AD", sec: "GPS"}, "Black Orc": {prim: "GS", sec: "AD"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Bretonnian": {"Squire": {prim: "G", sec: "AS"}, "Catcher": {prim: "AG", sec: "S"}, "Thrower": {prim: "GP", sec: "AS"}, "Grail Knight": {prim: "GS", sec: "A"}},
-  "Chaos Chosen": {"Beastman": {prim: "GM", sec: "ADPS"}, "Chosen": {prim: "GMS", sec: "AD"}, "Troll": {prim: "MS", sec: "AGP"}, "Ogre": {prim: "MS", sec: "AG"}, "Minotaur": {prim: "MS", sec: "AG"}},
-  "Chaos Dwarf": {"Hobgoblin": {prim: "D", sec: "AGS"}, "Stabba": {prim: "DG", sec: "AS"}, "Blocker": {prim: "GS", sec: "ADM"}, "Flamer": {prim: "GS", sec: "ADM"}, "Bull Centaur": {prim: "GS", sec: "ADM"}, "Minotaur": {prim: "MS", sec: "AG"}},
-  "Chaos Renegade": {"Lineman": {prim: "DGM", sec: "AS"}, "Goblin": {prim: "ADM", sec: "GP"}, "Orc": {prim: "DGM", sec: "AS"}, "Skaven": {prim: "DGM", sec: "AS"}, "DarkElf": {prim: "ADGM", sec: "S"}, "Thrower": {prim: "DGMP", sec: "AS"}, "Troll": {prim: "S", sec: "AGPM"}, "Ogre": {prim: "S", sec: "AGM"}, "Minotaur": {prim: "S", sec: "AGM"}, "RatOgre": {prim: "S", sec: "AGM"}},
-  "Dark Elf": {"Lineman": {prim: "AG", sec: "DS"}, "Runner": {prim: "AGP", sec: "DS"}, "Assassin": {prim: "AD", sec: "GS"}, "Blitzer": {prim: "AG", sec: "DPS"}, "Witch Elf": {prim: "AG", sec: "DS"}},
-  "Dwarf": {"Lineman": {prim: "DG", sec: "S"}, "Runner": {prim: "GP", sec: "S"}, "Blitzer": {prim: "GS", sec: "P"}, "Troll Slayer": {prim: "GS", sec: "D"}, "Deathroller": {prim: "DS", sec: "G"}},
-  "Elf Union": {"Lineman": {prim: "AG", sec: "S"}, "Thrower": {prim: "AGP", sec: "S"}, "Catcher": {prim: "AG", sec: "S"}, "Blitzer": {prim: "AG", sec: "PS"}},
-  "Gnome": {"Lineman": {prim: "A", sec: "DGS"}, "Fox": {prim: "", sec: "A"}, "Illusionist": {prim: "AP", sec: "DG"}, "Beastmaster": {prim: "A", sec: "DGS"}, "Treeman": {prim: "S", sec: "AGP"}},
-  "Halfling": {"Lineman": {prim: "A", sec: "DGS"}, "Hefty": {prim: "AP", sec: "DGS"}, "Catcher": {prim: "A", sec: "DGS"}, "Treeman": {prim: "S", sec: "AGP"}},
-  "Goblin": {"Lineman": {prim: "AD", sec: "GPS"}, "Loony": {prim: "D", sec: "AGS"}, "Bomma": {prim: "DP", sec: "AGS"}, "Ooligan": {prim: "AD", sec: "GS"}, "Doom Diver": {prim: "A", sec: "DGS"}, "Fanatic": {prim: "DS", sec: "AG"}, "Pogoer": {prim: "A", sec: "DGS"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Human": {"Lineman": {prim: "G", sec: "ADS"}, "Halfling": {prim: "A", sec: "DGS"}, "Catcher": {prim: "AG", sec: "DPS"}, "Thrower": {prim: "GP", sec: "ADS"}, "Blitzer": {prim: "GS", sec: "AD"}, "Ogre": {prim: "S", sec: "AGM"}},
-  "Imperial Nobility": {"Retainer": {prim: "G", sec: "AS"}, "Thrower": {prim: "GP", sec: "AS"}, "Bodyguard": {prim: "GS", sec: "A"}, "Blitzer": {prim: "AG", sec: "PS"}, "Ogre": {prim: "S", sec: "AGM"}},
-  "Khorne": {"Marauder": {prim: "GM", sec: "ADS"}, "Khorngor": {prim: "GMS", sec: "ADP"}, "Bloodseeker": {prim: "GMS", sec: "AD"}, "Bloodspawn": {prim: "MS", sec: "AG"}},
-  "Lizardmen": {"Skink": {prim: "A", sec: "GDPS"}, "Chameleon": {prim: "AP", sec: "GDS"}, "Saurus": {prim: "GS", sec: "A"}, "Krox": {prim: "S", sec: "AG"}},
-  "Necromantic Horror": {"Zombie": {prim: "DG", sec: "AS"}, "Ghoul": {prim: "AG", sec: "DPS"}, "Wraith": {prim: "GS", sec: "AD"}, "Flesh Golem": {prim: "GS", sec: "AD"}, "Werewolf": {prim: "AG", sec: "DPS"}},
-  "Norse": {"Raider": {prim: "G", sec: "APS"}, "Boar": {prim: "", sec: "A"}, "Berserker": {prim: "GS", sec: "AP"}, "Valkyrie": {prim: "AGP", sec: "S"}, "Ulfwerner": {prim: "GS", sec: "A"}, "Yhetee": {prim: "S", sec: "AG"}},
-  "Nurgle": {"Rotter": {prim: "DGM", sec: "AS"}, "Pestigor": {prim: "GMS", sec: "ADP"}, "Bloater": {prim: "GMS", sec: "AD"}, "Rotspawn": {prim: "S", sec: "DGM"}},
-  "Ogre": {"Gnoblar": {prim: "AD", sec: "G"}, "Ogre": {prim: "S", sec: "ADGP"}, "Punter": {prim: "PS", sec: "ADG"}},
-  "Old World Alliance": {"Lineman": {prim: "G", sec: "AS"}, "Halfling": {prim: "A", sec: "GS"}, "Catcher": {prim: "AG", sec: "PS"}, "Dwarf Blocker": {prim: "DG", sec: "S"}, "Thrower": {prim: "GP", sec: "AS"}, "Runner": {prim: "GP", sec: "AS"}, "Human Blitzer": {prim: "GS", sec: "A"}, "Dwarf Blitzer": {prim: "GS", sec: "P"}, "Troll Slayer": {prim: "GS", sec: "A"}, "Ogre": {prim: "S", sec: "AGM"}, "Treeman": {prim: "S", sec: "AGP"}},
-  "Orc": {"Lineman": {prim: "GS", sec: "AD"}, "Goblin": {prim: "AD", sec: "GPS"}, "Thrower": {prim: "GP", sec: "ADS"}, "Blitzer": {prim: "GS", sec: "AD"}, "Big Un": {prim: "GS", sec: "AD"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Shambling Undead": {"Skeleton": {prim: "G", sec: "ADS"}, "Zombie": {prim: "DG", sec: "AS"}, "Ghoul": {prim: "AG", sec: "DPS"}, "Wight": {prim: "GS", sec: "AD"}, "Mummy": {prim: "S", sec: "AG"}},
-  "Skaven": {"Clanrat": {prim: "DG", sec: "AMS"}, "Thrower": {prim: "GP", sec: "ADMS"}, "Gutter": {prim: "ADG", sec: "MS"}, "Blitzer": {prim: "GS", sec: "ADM"}, "Rat Ogre": {prim: "S", sec: "AGM"}},
-  "Snotling": {"Lineman": {prim: "AD", sec: "G"}, "Hoppa": {prim: "AD", sec: "G"}, "Runna": {prim: "AD", sec: "G"}, "Flinga": {prim: "ADP", sec: "G"}, "Pump Wagon": {prim: "DS", sec: "AG"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Tomb King": {"Lineman": {prim: "G", sec: "ADS"}, "Thrower": {prim: "GP", sec: "ADS"}, "Blitzer": {prim: "GS", sec: "AD"}, "Tomb Guardian": {prim: "S", sec: "AG"}},
-  "Underworld Denizens": {"Goblin": {prim: "ADM", sec: "GPS"}, "Snotling": {prim: "ADM", sec: "G"}, "Clanrat": {prim: "DGM", sec: "AS"}, "Thrower": {prim: "GMP", sec: "ADS"}, "Gutter": {prim: "ADGM", sec: "S"}, "Blitzer": {prim: "GMS", sec: "AD"}, "Troll": {prim: "MS", sec: "AGP"}, "Rat Ogre": {prim: "MS", sec: "AG"}},
-  "Vampire": {"Thrall": {prim: "G", sec: "AS"}, "Runner": {prim: "AG", sec: "PS"}, "Thrower": {prim: "AGP", sec: "S"}, "Blitzer": {prim: "AGS", sec: ""}, "Vargheist": {prim: "S", sec: "AG"}},
-  "Wood Elf": {"Lineman": {prim: "AG", sec: "S"}, "Thrower": {prim: "AGP", sec: "S"}, "Catcher": {prim: "AG", sec: "PS"}, "Wardancer": {prim: "AG", sec: "PS"}, "Treeman": {prim: "S", sec: "AGP"}}
-};
-
 // Miniature purchase links for each team
 const TEAM_MINIATURE_LINKS = {
   "Amazon": [
@@ -235,11 +192,6 @@ export default function BloodBowlRoster() {
   const [inducements, setInducements] = useState({});
   const [viewMode, setViewMode] = useState('build');
   const [draggedIndex, setDraggedIndex] = useState(null);
-  const [startingTreasury, setStartingTreasury] = useState(STARTING_TREASURY);
-  const [isEditingTreasury, setIsEditingTreasury] = useState(false);
-  const [playerSkills, setPlayerSkills] = useState({}); // { playerId: { primary: [], secondary: [] } }
-  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
-  const [showSkillModal, setShowSkillModal] = useState(false);
 
   const teamData = T[selectedTeam];
   const INDUCEMENTS = getInducements(selectedTeam);
@@ -256,7 +208,7 @@ export default function BloodBowlRoster() {
     return cost;
   }, [purchasedPlayers, inducements, teamData]);
 
-  const remaining = startingTreasury - totalSpent;
+  const remaining = STARTING_TREASURY - totalSpent;
 
   const purchasePlayer = (position) => {
     if (remaining < position.c) return;
@@ -289,8 +241,6 @@ export default function BloodBowlRoster() {
   const resetRoster = () => {
     setPurchasedPlayers([]);
     setInducements({});
-    setStartingTreasury(STARTING_TREASURY);
-    setPlayerSkills({});
   };
 
   const handleDragStart = (e, index) => {
@@ -313,66 +263,6 @@ export default function BloodBowlRoster() {
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
-  };
-
-  const handleTreasuryChange = (e) => {
-    // Remove all non-digit characters
-    const value = e.target.value.replace(/\D/g, '');
-    const numValue = parseInt(value) || 0;
-    setStartingTreasury(numValue);
-  };
-
-  const handleTreasuryBlur = () => {
-    setIsEditingTreasury(false);
-  };
-
-  const handleTreasuryClick = () => {
-    setIsEditingTreasury(true);
-  };
-
-  const addSkillToPlayer = (playerId, skill, isPrimary) => {
-    setPlayerSkills(prev => {
-      const playerSkillData = prev[playerId] || { primary: [], secondary: [] };
-      const category = isPrimary ? 'primary' : 'secondary';
-      
-      // Check if skill already exists
-      if (playerSkillData.primary.includes(skill) || playerSkillData.secondary.includes(skill)) {
-        return prev;
-      }
-      
-      return {
-        ...prev,
-        [playerId]: {
-          ...playerSkillData,
-          [category]: [...playerSkillData[category], skill]
-        }
-      };
-    });
-  };
-
-  const removeSkillFromPlayer = (playerId, skill) => {
-    setPlayerSkills(prev => {
-      const playerSkillData = prev[playerId];
-      if (!playerSkillData) return prev;
-      
-      return {
-        ...prev,
-        [playerId]: {
-          primary: playerSkillData.primary.filter(s => s !== skill),
-          secondary: playerSkillData.secondary.filter(s => s !== skill)
-        }
-      };
-    });
-  };
-
-  const openSkillModal = (playerId) => {
-    setSelectedPlayerId(playerId);
-    setShowSkillModal(true);
-  };
-
-  const closeSkillModal = () => {
-    setShowSkillModal(false);
-    setSelectedPlayerId(null);
   };
 
   const handlePrint = () => window.print();
@@ -472,15 +362,12 @@ export default function BloodBowlRoster() {
                       <th className="text-center p-2 text-white font-bold border border-blue-900">PA</th>
                       <th className="text-center p-2 text-white font-bold border border-blue-900">AV</th>
                       <th className="text-left p-2 text-white font-bold border border-blue-900">SKILLS</th>
-                      <th className="text-center p-2 text-white font-bold border border-blue-900">ACTIONS</th>
                       <th className="text-right p-2 text-white font-bold border border-blue-900">COST</th>
                     </tr>
                   </thead>
                   <tbody>
                     {purchasedPlayers.map((player, idx) => {
                       const stats = player.s.split('/');
-                      const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
-                      
                       return (
                         <tr 
                           key={player.id} 
@@ -502,34 +389,7 @@ export default function BloodBowlRoster() {
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[2]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[3]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[4]}</td>
-                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">
-                            {/* Basic skills (normal text) */}
-                            {player.k && player.k !== '-' && <span>{player.k}</span>}
-                            {/* Primary added skills (blue, bold) */}
-                            {addedSkills.primary.map((skill, i) => (
-                              <span key={`p-${i}`}>
-                                {(player.k && player.k !== '-') || i > 0 ? ', ' : ''}
-                                <span className="text-blue-700 font-bold">{skill}</span>
-                              </span>
-                            ))}
-                            {/* Secondary added skills (red, bold) */}
-                            {addedSkills.secondary.map((skill, i) => (
-                              <span key={`s-${i}`}>
-                                {(player.k && player.k !== '-') || addedSkills.primary.length > 0 || i > 0 ? ', ' : ''}
-                                <span className="text-red-700 font-bold">{skill}</span>
-                              </span>
-                            ))}
-                            {!player.k && addedSkills.primary.length === 0 && addedSkills.secondary.length === 0 && '-'}
-                          </td>
-                          <td className="p-1.5 border border-blue-200 text-center">
-                            <button
-                              onClick={() => openSkillModal(player.id)}
-                              className="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-bold"
-                              title="Add skills"
-                            >
-                              +SKILL
-                            </button>
-                          </td>
+                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">{player.k || '-'}</td>
                           <td className="p-1.5 text-right text-blue-900 font-bold border border-blue-200 text-sm">{formatCost(player.c)}</td>
                         </tr>
                       );
@@ -553,169 +413,6 @@ export default function BloodBowlRoster() {
             )}
           </div>
         </div>
-
-        {/* Skill Modal */}
-        {showSkillModal && selectedPlayerId && (() => {
-          const player = purchasedPlayers.find(p => p.id === selectedPlayerId);
-          if (!player) return null;
-          
-          const positionSkills = SKILL_ACCESS[selectedTeam]?.[player.n];
-          
-          if (!positionSkills) {
-            return (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeSkillModal}>
-                <div className="bg-white rounded-lg p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
-                  <h2 className="text-xl font-bold text-red-600 mb-4">Skill Access Not Available</h2>
-                  <p className="text-gray-700 mb-4">
-                    Cannot find skill access data for:<br/>
-                    <strong>Team:</strong> "{selectedTeam}"<br/>
-                    <strong>Position:</strong> "{player.n}"<br/>
-                    <br/>
-                    <small>Team exists in SKILL_ACCESS: {SKILL_ACCESS[selectedTeam] ? 'YES' : 'NO'}</small>
-                  </p>
-                  <button
-                    onClick={closeSkillModal}
-                    className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            );
-          }
-          
-          const addedSkills = playerSkills[selectedPlayerId] || { primary: [], secondary: [] };
-          
-          // Convert string categories to arrays (e.g., "GP" -> ["G", "P"])
-          const primaryCategories = positionSkills.prim ? positionSkills.prim.split('') : [];
-          const secondaryCategories = positionSkills.sec ? positionSkills.sec.split('') : [];
-          
-          return (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={closeSkillModal}>
-              <div className="bg-blue-50 rounded-lg p-4 w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-3">
-                  <h2 className="text-xl font-bold text-blue-800">
-                    Add Skills to {player.n}
-                  </h2>
-                  <button
-                    onClick={closeSkillModal}
-                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold leading-none"
-                  >
-                    ×
-                  </button>
-                </div>
-                
-                <div className="mb-3 p-2 bg-blue-100 rounded border border-blue-300">
-                  <h3 className="font-bold text-blue-900 text-sm mb-1">Current Added Skills:</h3>
-                  <div className="flex flex-wrap gap-1">
-                    {addedSkills.primary.map((skill, i) => (
-                      <span key={i} className="bg-blue-600 text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">
-                        {skill}
-                        <button
-                          onClick={() => removeSkillFromPlayer(selectedPlayerId, skill)}
-                          className="hover:text-red-200 font-bold"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                    {addedSkills.secondary.map((skill, i) => (
-                      <span key={i} className="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">
-                        {skill}
-                        <button
-                          onClick={() => removeSkillFromPlayer(selectedPlayerId, skill)}
-                          className="hover:text-red-200 font-bold"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                    {addedSkills.primary.length === 0 && addedSkills.secondary.length === 0 && (
-                      <span className="text-gray-600 italic text-xs">No skills added yet</span>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="space-y-3">
-                  {/* Primary Skills Dropdown */}
-                  <div>
-                    <label className="block text-sm font-bold text-blue-700 mb-1">
-                      Add Primary Skill (Cheaper)
-                    </label>
-                    <select
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          addSkillToPlayer(selectedPlayerId, e.target.value, true);
-                          e.target.value = '';
-                        }
-                      }}
-                      className="w-full px-3 py-2 border-2 border-blue-300 rounded bg-blue-50 text-blue-900 font-semibold text-sm focus:outline-none focus:border-blue-500"
-                      defaultValue=""
-                    >
-                      <option value="">Select a primary skill...</option>
-                      {primaryCategories.map(category => 
-                        SKILLS_BY_CATEGORY[category]?.map(skill => {
-                          const isAlreadyAdded = addedSkills.primary.includes(skill) || addedSkills.secondary.includes(skill);
-                          return (
-                            <option 
-                              key={skill} 
-                              value={skill}
-                              disabled={isAlreadyAdded}
-                            >
-                              {skill} ({category}){isAlreadyAdded ? ' - Already Added' : ''}
-                            </option>
-                          );
-                        })
-                      )}
-                    </select>
-                  </div>
-                  
-                  {/* Secondary Skills Dropdown */}
-                  <div>
-                    <label className="block text-sm font-bold text-red-700 mb-1">
-                      Add Secondary Skill (More Expensive)
-                    </label>
-                    <select
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          addSkillToPlayer(selectedPlayerId, e.target.value, false);
-                          e.target.value = '';
-                        }
-                      }}
-                      className="w-full px-3 py-2 border-2 border-red-300 rounded bg-red-50 text-red-900 font-semibold text-sm focus:outline-none focus:border-red-500"
-                      defaultValue=""
-                    >
-                      <option value="">Select a secondary skill...</option>
-                      {secondaryCategories.map(category => 
-                        SKILLS_BY_CATEGORY[category]?.map(skill => {
-                          const isAlreadyAdded = addedSkills.primary.includes(skill) || addedSkills.secondary.includes(skill);
-                          return (
-                            <option 
-                              key={skill} 
-                              value={skill}
-                              disabled={isAlreadyAdded}
-                            >
-                              {skill} ({category}){isAlreadyAdded ? ' - Already Added' : ''}
-                            </option>
-                          );
-                        })
-                      )}
-                    </select>
-                  </div>
-                </div>
-                
-                <div className="mt-4 flex justify-end">
-                  <button
-                    onClick={closeSkillModal}
-                    className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold text-sm"
-                  >
-                    Done
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })()}
       </div>
     );
   }
@@ -878,29 +575,9 @@ export default function BloodBowlRoster() {
             </div>
 
             <div className="flex gap-3 items-center">
-              <div 
-                className="bg-blue-800 rounded px-4 py-2 border border-yellow-400 text-center cursor-pointer hover:bg-blue-700 transition-colors"
-                onClick={handleTreasuryClick}
-                title="Click to edit"
-              >
+              <div className="bg-blue-800 rounded px-4 py-2 border border-yellow-400 text-center">
                 <div className="text-yellow-400 text-xs font-bold">STARTING TREASURY</div>
-                {isEditingTreasury ? (
-                  <input
-                    type="text"
-                    value={startingTreasury.toLocaleString()}
-                    onChange={handleTreasuryChange}
-                    onBlur={handleTreasuryBlur}
-                    autoFocus
-                    className="text-white text-xl font-bold bg-blue-900 text-center w-32 border border-yellow-400 rounded px-1"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        setIsEditingTreasury(false);
-                      }
-                    }}
-                  />
-                ) : (
-                  <div className="text-white text-xl font-bold">{formatCost(startingTreasury)}</div>
-                )}
+                <div className="text-white text-xl font-bold">{formatCost(STARTING_TREASURY)}</div>
               </div>
               <div className="bg-red-700 rounded px-4 py-2 border border-yellow-400 text-center">
                 <div className="text-yellow-400 text-xs font-bold">SPENT</div>
