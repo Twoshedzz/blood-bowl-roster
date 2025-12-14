@@ -4,7 +4,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(),
-  tailwindcss()]
+  // Required for GitHub Pages project sites:
+  // https://<user>.github.io/<repo>/
+  base: '/blood-bowl-roster/',
+  plugins: [react(), tailwindcss()],
 })
 
