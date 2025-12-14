@@ -13,37 +13,221 @@ const SKILLS_BY_CATEGORY = {
   S: ["Arm Bar", "Brawler", "Break Tackle", "Bullseye", "Grab", "Guard", "Juggernaut", "Mighty Blow", "Multiple Block", "Stand Firm", "Strong Arm", "Thick Skull"]
 };
 
-// Complete skill access for all 30 teams - prim = primary categories, sec = secondary categories
-const SKILL_ACCESS = {
-  "Amazon": {"Lino": {prim: "G", sec: "AS"}, "Thrower": {prim: "GP", sec: "AS"}, "Blitzer": {prim: "AG", sec: "S"}, "Blocker": {prim: "GS", sec: "A"}},
-  "Black Orc": {"Goblin": {prim: "AD", sec: "GPS"}, "Black Orc": {prim: "GS", sec: "AD"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Bretonnian": {"Squire": {prim: "G", sec: "AS"}, "Catcher": {prim: "AG", sec: "S"}, "Thrower": {prim: "GP", sec: "AS"}, "Grail Knight": {prim: "GS", sec: "A"}},
-  "Chaos Chosen": {"Beastman": {prim: "GM", sec: "ADPS"}, "Chosen": {prim: "GMS", sec: "AD"}, "Troll": {prim: "MS", sec: "AGP"}, "Ogre": {prim: "MS", sec: "AG"}, "Minotaur": {prim: "MS", sec: "AG"}},
-  "Chaos Dwarf": {"Hobgoblin": {prim: "D", sec: "AGS"}, "Stabba": {prim: "DG", sec: "AS"}, "Blocker": {prim: "GS", sec: "ADM"}, "Flamer": {prim: "GS", sec: "ADM"}, "Bull Centaur": {prim: "GS", sec: "ADM"}, "Minotaur": {prim: "MS", sec: "AG"}},
-  "Chaos Renegade": {"Lineman": {prim: "DGM", sec: "AS"}, "Goblin": {prim: "ADM", sec: "GP"}, "Orc": {prim: "DGM", sec: "AS"}, "Skaven": {prim: "DGM", sec: "AS"}, "DarkElf": {prim: "ADGM", sec: "S"}, "Thrower": {prim: "DGMP", sec: "AS"}, "Troll": {prim: "S", sec: "AGPM"}, "Ogre": {prim: "S", sec: "AGM"}, "Minotaur": {prim: "S", sec: "AGM"}, "RatOgre": {prim: "S", sec: "AGM"}},
-  "Dark Elf": {"Lineman": {prim: "AG", sec: "DS"}, "Runner": {prim: "AGP", sec: "DS"}, "Assassin": {prim: "AD", sec: "GS"}, "Blitzer": {prim: "AG", sec: "DPS"}, "Witch Elf": {prim: "AG", sec: "DS"}},
-  "Dwarf": {"Lineman": {prim: "DG", sec: "S"}, "Runner": {prim: "GP", sec: "S"}, "Blitzer": {prim: "GS", sec: "P"}, "Troll Slayer": {prim: "GS", sec: "D"}, "Deathroller": {prim: "DS", sec: "G"}},
-  "Elf Union": {"Lineman": {prim: "AG", sec: "S"}, "Thrower": {prim: "AGP", sec: "S"}, "Catcher": {prim: "AG", sec: "S"}, "Blitzer": {prim: "AG", sec: "PS"}},
-  "Gnome": {"Lineman": {prim: "A", sec: "DGS"}, "Fox": {prim: "", sec: "A"}, "Illusionist": {prim: "AP", sec: "DG"}, "Beastmaster": {prim: "A", sec: "DGS"}, "Treeman": {prim: "S", sec: "AGP"}},
-  "Halfling": {"Lineman": {prim: "A", sec: "DGS"}, "Hefty": {prim: "AP", sec: "DGS"}, "Catcher": {prim: "A", sec: "DGS"}, "Treeman": {prim: "S", sec: "AGP"}},
-  "Goblin": {"Lineman": {prim: "AD", sec: "GPS"}, "Loony": {prim: "D", sec: "AGS"}, "Bomma": {prim: "DP", sec: "AGS"}, "Ooligan": {prim: "AD", sec: "GS"}, "Doom Diver": {prim: "A", sec: "DGS"}, "Fanatic": {prim: "DS", sec: "AG"}, "Pogoer": {prim: "A", sec: "DGS"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Human": {"Lineman": {prim: "G", sec: "ADS"}, "Halfling": {prim: "A", sec: "DGS"}, "Catcher": {prim: "AG", sec: "DPS"}, "Thrower": {prim: "GP", sec: "ADS"}, "Blitzer": {prim: "GS", sec: "AD"}, "Ogre": {prim: "S", sec: "AGM"}},
-  "Imperial Nobility": {"Retainer": {prim: "G", sec: "AS"}, "Thrower": {prim: "GP", sec: "AS"}, "Bodyguard": {prim: "GS", sec: "A"}, "Blitzer": {prim: "AG", sec: "PS"}, "Ogre": {prim: "S", sec: "AGM"}},
-  "Khorne": {"Marauder": {prim: "GM", sec: "ADS"}, "Khorngor": {prim: "GMS", sec: "ADP"}, "Bloodseeker": {prim: "GMS", sec: "AD"}, "Bloodspawn": {prim: "MS", sec: "AG"}},
-  "Lizardmen": {"Skink": {prim: "A", sec: "GDPS"}, "Chameleon": {prim: "AP", sec: "GDS"}, "Saurus": {prim: "GS", sec: "A"}, "Krox": {prim: "S", sec: "AG"}},
-  "Necromantic Horror": {"Zombie": {prim: "DG", sec: "AS"}, "Ghoul": {prim: "AG", sec: "DPS"}, "Wraith": {prim: "GS", sec: "AD"}, "Flesh Golem": {prim: "GS", sec: "AD"}, "Werewolf": {prim: "AG", sec: "DPS"}},
-  "Norse": {"Raider": {prim: "G", sec: "APS"}, "Boar": {prim: "", sec: "A"}, "Berserker": {prim: "GS", sec: "AP"}, "Valkyrie": {prim: "AGP", sec: "S"}, "Ulfwerner": {prim: "GS", sec: "A"}, "Yhetee": {prim: "S", sec: "AG"}},
-  "Nurgle": {"Rotter": {prim: "DGM", sec: "AS"}, "Pestigor": {prim: "GMS", sec: "ADP"}, "Bloater": {prim: "GMS", sec: "AD"}, "Rotspawn": {prim: "S", sec: "DGM"}},
-  "Ogre": {"Gnoblar": {prim: "AD", sec: "G"}, "Ogre": {prim: "S", sec: "ADGP"}, "Punter": {prim: "PS", sec: "ADG"}},
-  "Old World Alliance": {"Lineman": {prim: "G", sec: "AS"}, "Halfling": {prim: "A", sec: "GS"}, "Catcher": {prim: "AG", sec: "PS"}, "Dwarf Blocker": {prim: "DG", sec: "S"}, "Thrower": {prim: "GP", sec: "AS"}, "Runner": {prim: "GP", sec: "AS"}, "Human Blitzer": {prim: "GS", sec: "A"}, "Dwarf Blitzer": {prim: "GS", sec: "P"}, "Troll Slayer": {prim: "GS", sec: "A"}, "Ogre": {prim: "S", sec: "AGM"}, "Treeman": {prim: "S", sec: "AGP"}},
-  "Orc": {"Lineman": {prim: "GS", sec: "AD"}, "Goblin": {prim: "AD", sec: "GPS"}, "Thrower": {prim: "GP", sec: "ADS"}, "Blitzer": {prim: "GS", sec: "AD"}, "Big Un": {prim: "GS", sec: "AD"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Shambling Undead": {"Skeleton": {prim: "G", sec: "ADS"}, "Zombie": {prim: "DG", sec: "AS"}, "Ghoul": {prim: "AG", sec: "DPS"}, "Wight": {prim: "GS", sec: "AD"}, "Mummy": {prim: "S", sec: "AG"}},
-  "Skaven": {"Clanrat": {prim: "DG", sec: "AMS"}, "Thrower": {prim: "GP", sec: "ADMS"}, "Gutter": {prim: "ADG", sec: "MS"}, "Blitzer": {prim: "GS", sec: "ADM"}, "Rat Ogre": {prim: "S", sec: "AGM"}},
-  "Snotling": {"Lineman": {prim: "AD", sec: "G"}, "Hoppa": {prim: "AD", sec: "G"}, "Runna": {prim: "AD", sec: "G"}, "Flinga": {prim: "ADP", sec: "G"}, "Pump Wagon": {prim: "DS", sec: "AG"}, "Troll": {prim: "S", sec: "AGP"}},
-  "Tomb King": {"Lineman": {prim: "G", sec: "ADS"}, "Thrower": {prim: "GP", sec: "ADS"}, "Blitzer": {prim: "GS", sec: "AD"}, "Tomb Guardian": {prim: "S", sec: "AG"}},
-  "Underworld Denizens": {"Goblin": {prim: "ADM", sec: "GPS"}, "Snotling": {prim: "ADM", sec: "G"}, "Clanrat": {prim: "DGM", sec: "AS"}, "Thrower": {prim: "GMP", sec: "ADS"}, "Gutter": {prim: "ADGM", sec: "S"}, "Blitzer": {prim: "GMS", sec: "AD"}, "Troll": {prim: "MS", sec: "AGP"}, "Rat Ogre": {prim: "MS", sec: "AG"}},
-  "Vampire": {"Thrall": {prim: "G", sec: "AS"}, "Runner": {prim: "AG", sec: "PS"}, "Thrower": {prim: "AGP", sec: "S"}, "Blitzer": {prim: "AGS", sec: ""}, "Vargheist": {prim: "S", sec: "AG"}},
-  "Wood Elf": {"Lineman": {prim: "AG", sec: "S"}, "Thrower": {prim: "AGP", sec: "S"}, "Catcher": {prim: "AG", sec: "PS"}, "Wardancer": {prim: "AG", sec: "PS"}, "Treeman": {prim: "S", sec: "AGP"}}
+// Position skill access - this would need to be added to each team's position data
+// For now, I'll create a structure to store this separately
+// Format: { teamName: { positionName: { primary: ['A', 'G'], secondary: ['S', 'P'] } } }
+const POSITION_SKILL_ACCESS = {
+  "Amazon": {
+    "Lino": { primary: ["G"], secondary: ["A", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["S"] },
+    "Blocker": { primary: ["G", "S"], secondary: ["A"] },
+  },
+  "Black Orc": {
+    "Goblin": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
+    "Black Orc": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Bretonnian": {
+    "Squire": { primary: ["G"], secondary: ["A", "S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Grail Knight": { primary: ["G", "S"], secondary: ["A"] },
+  },
+  "Chaos Chosen": {
+    "Beastman": { primary: ["G", "M"], secondary: ["A", "D", "P", "S"] },
+    "Chosen": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["M", "S"], secondary: ["A", "G", "P"] },
+    "Ogre": { primary: ["M", "S"], secondary: ["A", "G"] },
+    "Minotaur": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Chaos Dwarf": {
+    "Hobgoblin": { primary: ["D"], secondary: ["A", "G", "S"] },
+    "Stabba": { primary: ["D", "G"], secondary: ["A", "S"] },
+    "Blocker": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Flamer": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Bull Centaur": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Minotaur": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Chaos Renegade": {
+    "Lineman": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Goblin": { primary: ["A", "D", "M"], secondary: ["G", "P"] },
+    "Orc": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Skaven": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "DarkElf": { primary: ["A", "D", "G", "M"], secondary: ["S"] },
+    "Thrower": { primary: ["D", "G", "M", "P"], secondary: ["A", "S"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P", "M"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+    "Minotaur": { primary: ["S"], secondary: ["A", "G", "M"] },
+    "RatOgre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Dark Elf": {
+    "Lineman": { primary: ["A", "G"], secondary: ["D", "S"] },
+    "Runner": { primary: ["A", "G", "P"], secondary: ["D", "S"] },
+    "Assassin": { primary: ["A", "D"], secondary: ["G", "S"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Witch Elf": { primary: ["A", "G"], secondary: ["D", "S"] },
+  },
+  "Dwarf": {
+    "Lineman": { primary: ["D", "G"], secondary: ["S"] },
+    "Runner": { primary: ["G", "P"], secondary: ["S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["P"] },
+    "Troll Slayer": { primary: ["G", "S"], secondary: ["D"] },
+    "Deathroller": { primary: ["D", "S"], secondary: ["G"] },
+  },
+  "Elf Union": {
+    "Lineman": { primary: ["A", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["S"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["P", "S"] },
+  },
+  "Gnome": {
+    "Lineman": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Illusionist": { primary: ["A", "P"], secondary: ["D", "G"] },
+    "Beastmaster": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Goblin": {
+    "Lineman": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
+    "Loony": { primary: ["D"], secondary: ["A", "G", "S"] },
+    "Bomma": { primary: ["D", "P"], secondary: ["A", "G", "S"] },
+    "Ooligan": { primary: ["A", "D"], secondary: ["G", "S"] },
+    "Doom Diver": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Fanatic": { primary: ["D", "S"], secondary: ["A", "G"] },
+    "Pogoer": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Halfling": {
+    "Lineman": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Hefty": { primary: ["A", "P"], secondary: ["D", "G", "S"] },
+    "Catcher": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Human": {
+    "Lineman": { primary: ["G"], secondary: ["A", "D", "S"] },
+    "Halfling": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Imperial Nobility": {
+    "Retainer": { primary: ["G"], secondary: ["A", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Bodyguard": { primary: ["G", "S"], secondary: ["A"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Khorne": {
+    "Marauder": { primary: ["G", "M"], secondary: ["A", "D", "S"] },
+    "Khorngor": { primary: ["G", "M", "S"], secondary: ["A", "D", "P"] },
+    "Bloodseeker": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Bloodspawn": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Lizardmen": {
+    "Skink": { primary: ["A"], secondary: ["G", "D", "P", "S"] },
+    "Chameleon": { primary: ["A", "P"], secondary: ["G", "D", "S"] },
+    "Saurus": { primary: ["G", "S"], secondary: ["A"] },
+    "Krox": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Necromantic Horror": {
+    "Zombie": { primary: ["D", "G"], secondary: ["A", "S"] },
+    "Ghoul": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Wraith": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Flesh Golem": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Werewolf": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+  },
+  "Norse": {
+    "Raider": { primary: ["G"], secondary: ["A", "P", "S"] },
+    "Berserker": { primary: ["G", "S"], secondary: ["A", "P"] },
+    "Valkyrie": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Ulfwerner": { primary: ["G", "S"], secondary: ["A"] },
+    "Yhetee": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Nurgle": {
+    "Rotter": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Pestigor": { primary: ["G", "M", "S"], secondary: ["A", "D", "P"] },
+    "Bloater": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Rotspawn": { primary: ["S"], secondary: ["D", "G", "M"] },
+  },
+  "Ogre": {
+    "Gnoblar": { primary: ["A", "D"], secondary: ["G"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "D", "G", "P"] },
+    "Punter": { primary: ["P", "S"], secondary: ["A", "D", "G"] },
+  },
+  "Old World Alliance": {
+    "Lineman": { primary: ["G"], secondary: ["A", "S"] },
+    "Halfling": { primary: ["A"], secondary: ["G", "S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Dwarf Blocker": { primary: ["D", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Runner": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Human Blitzer": { primary: ["G", "S"], secondary: ["A"] },
+    "Dwarf Blitzer": { primary: ["G", "S"], secondary: ["P"] },
+    "Troll Slayer": { primary: ["G", "S"], secondary: ["A"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Orc": {
+    "Lineman": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Goblin": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Big Un": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Shambling Undead": {
+    "Skeleton": { primary: ["G"], secondary: ["A", "D", "S"] },
+    "Zombie": { primary: ["D", "G"], secondary: ["A", "S"] },
+    "Ghoul": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Wight": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Mummy": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Skaven": {
+    "Clanrat": { primary: ["D", "G"], secondary: ["A", "M", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "M", "S"] },
+    "Gutter": { primary: ["A", "D", "G"], secondary: ["M", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Rat Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Snotling": {
+    "Lineman": { primary: ["A", "D"], secondary: ["G"] },
+    "Hoppa": { primary: ["A", "D"], secondary: ["G"] },
+    "Runna": { primary: ["A", "D"], secondary: ["G"] },
+    "Flinga": { primary: ["A", "D", "P"], secondary: ["G"] },
+    "Pump Wagon": { primary: ["D", "S"], secondary: ["A", "G"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Tomb King": {
+    "Lineman": { primary: ["G"], secondary: ["A", "D", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Tomb Guardian": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Underworld Denizens": {
+    "Goblin": { primary: ["A", "D", "M"], secondary: ["G", "P", "S"] },
+    "Snotling": { primary: ["A", "D", "M"], secondary: ["G"] },
+    "Clanrat": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Thrower": { primary: ["G", "M", "P"], secondary: ["A", "D", "S"] },
+    "Gutter": { primary: ["A", "D", "G", "M"], secondary: ["S"] },
+    "Blitzer": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["M", "S"], secondary: ["A", "G", "P"] },
+    "Rat Ogre": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Vampire": {
+    "Thrall": { primary: ["G"], secondary: ["A", "S"] },
+    "Runner": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Blitzer": { primary: ["A", "G", "S"], secondary: [] },
+    "Vargheist": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Wood Elf": {
+    "Lineman": { primary: ["A", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Wardancer": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
 };
 
 // Miniature purchase links for each team
@@ -60,7 +244,7 @@ const TEAM_MINIATURE_LINKS = {
     { name: "Hungry Troll", url: "https://hungrytrollminiatures.com/" }
   ],
   "Bretonnian": [
-    { name: "Hungry Troll (Sacré Graal)", url: "https://hungrytrollminiatures.com/bretonia/333-bretonians-quest-box-metal.html" }
+    { name: "Hungry Troll (SacrÃ© Graal)", url: "https://hungrytrollminiatures.com/bretonia/333-bretonians-quest-box-metal.html" }
   ],
   "Chaos Chosen": [
     { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Chaos-Chosen-Team-2022" },
@@ -235,11 +419,45 @@ export default function BloodBowlRoster() {
   const [inducements, setInducements] = useState({});
   const [viewMode, setViewMode] = useState('build');
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [playMode, setPlayMode] = useState('league'); // 'league' or 'tournament'
   const [startingTreasury, setStartingTreasury] = useState(STARTING_TREASURY);
   const [isEditingTreasury, setIsEditingTreasury] = useState(false);
   const [playerSkills, setPlayerSkills] = useState({}); // { playerId: { primary: [], secondary: [] } }
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [showSkillModal, setShowSkillModal] = useState(false);
+
+// Team background images - using public folder (move images to public/images/)
+const TEAM_BACKGROUNDS = {
+  "Amazon": "/images/Amazon.png",
+  "Black Orc": "/images/BlackOrcs.png",
+  "Bretonnian": "/images/Bretonnians.png",
+  "Chaos Chosen": "/images/ChaosChosen.png",
+  "Chaos Dwarf": "/images/ChaosDwarfs.png",
+  "Chaos Renegade": "/images/ChaosRenegade.png",
+  "Dark Elf": "/images/DarkElves.png",
+  "Dwarf": "/images/Dwarves.png",
+  "Elf Union": "/images/ElvenUnion.png",
+  "Gnome": "/images/Gnomes.png",
+  "Goblin": "/images/Goblins.png",
+  "Halfling": "/images/Halflings.png",
+  "Human": "/images/Human.png",
+  "Imperial Nobility": "/images/ImperialNobility.png",
+  "Khorne": "/images/Khorne.png",
+  "Lizardmen": "/images/Lizardmen.png",
+  "Necromantic Horror": "/images/Necromantic.png",
+  "Norse": "/images/Norse.png",
+  "Nurgle": "/images/Nurgle.png",
+  "Ogre": "/images/Ogres.png",
+  "Old World Alliance": "/images/OldWorldAlliance.png",
+  "Orc": "/images/Orcs.png",
+  "Shambling Undead": "/images/ShamblingUndead.png",
+  "Skaven": "/images/Skaven.png",
+  "Snotling": "/images/Snotling.png",
+  "Tomb King": "/images/Tombkings.png",
+  "Underworld Denizens": "/images/UnderworldDenizens.png",
+  "Vampire": "/images/Vampire.png",
+  "Wood Elf": "/images/Woodelf.png"
+};
 
   const teamData = T[selectedTeam];
   const INDUCEMENTS = getInducements(selectedTeam);
@@ -255,6 +473,20 @@ export default function BloodBowlRoster() {
     });
     return cost;
   }, [purchasedPlayers, inducements, teamData]);
+
+  // Calculate team value (includes skill costs)
+  const teamValue = useMemo(() => {
+    let value = totalSpent;
+    // Add skill costs
+    purchasedPlayers.forEach(player => {
+      const skills = playerSkills[player.id];
+      if (skills) {
+        value += skills.primary.length * 20000; // Primary skills: 20k
+        value += skills.secondary.length * 40000; // Secondary skills: 40k
+      }
+    });
+    return value;
+  }, [totalSpent, purchasedPlayers, playerSkills]);
 
   const remaining = startingTreasury - totalSpent;
 
@@ -286,11 +518,17 @@ export default function BloodBowlRoster() {
     setInducements({});
   };
 
+  const handlePlayModeChange = (mode) => {
+    setPlayMode(mode);
+    if (mode === 'league') {
+      setStartingTreasury(STARTING_TREASURY); // Lock to 1M in league mode
+    }
+  };
+
   const resetRoster = () => {
     setPurchasedPlayers([]);
     setInducements({});
     setStartingTreasury(STARTING_TREASURY);
-    setPlayerSkills({});
   };
 
   const handleDragStart = (e, index) => {
@@ -327,7 +565,9 @@ export default function BloodBowlRoster() {
   };
 
   const handleTreasuryClick = () => {
-    setIsEditingTreasury(true);
+    if (playMode === 'tournament') {
+      setIsEditingTreasury(true);
+    }
   };
 
   const addSkillToPlayer = (playerId, skill, isPrimary) => {
@@ -398,11 +638,79 @@ export default function BloodBowlRoster() {
       <div className="min-h-screen p-3" style={{ 
         background: 'linear-gradient(135deg, #F5EDE0 0%, #E8DDD0 50%, #DDD2C5 100%)',
       }}>
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap');
-          * { font-family: 'Roboto Condensed', sans-serif; }
-          h1, h2, h3, button { font-family: 'Teko', sans-serif; letter-spacing: 0.5px; }
-        `}</style>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap');
+        * { font-family: 'Roboto Condensed', sans-serif; }
+        h1, h2, h3, button { font-family: 'Teko', sans-serif; letter-spacing: 0.5px; }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        /* Desktop layout (above 640px) */
+        .mobile-grid {
+          display: grid;
+          grid-template-columns: 4fr 5fr 3fr;
+          gap: 0.75rem;
+        }
+        
+        /* Tablet/Mobile layout (640px and below) */
+        @media (max-width: 640px) {
+          .mobile-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.75rem;
+            background-image: none !important;
+          }
+          
+          .positions-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          
+          .players-col {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+          }
+          
+          .inducements-col {
+            grid-column: 1 / -1 !important;
+            grid-row: 2 !important;
+          }
+        }
+        
+        /* Small mobile layout (390px and below) - single column, smaller fonts */
+        @media (max-width: 390px) {
+          .mobile-grid {
+            grid-template-columns: 1fr !important;
+          }
+          
+          .positions-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          
+          .players-col {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+          }
+          
+          .inducements-col {
+            grid-column: 1 !important;
+            grid-row: 3 !important;
+          }
+          
+          h1 { font-size: 1.5rem !important; }
+          h2 { font-size: 1.25rem !important; }
+          h3 { font-size: 1rem !important; }
+          .text-2xl { font-size: 1.25rem !important; }
+          .text-xl { font-size: 1.125rem !important; }
+          .text-lg { font-size: 1rem !important; }
+          button { font-size: 0.875rem !important; padding: 0.25rem 0.5rem !important; }
+        }
+      `}</style>
 
         <div className="max-w-[1800px] mx-auto">
           <div className="mb-3 flex gap-3">
@@ -429,9 +737,9 @@ export default function BloodBowlRoster() {
                 <p className="text-sm text-blue-900">{teamData.l}</p>
               </div>
               <div className="flex gap-3">
-                <div className="bg-blue-800 rounded px-3 py-1 border border-yellow-400 text-center">
-                  <div className="text-yellow-400 text-xs font-bold">VALUE</div>
-                  <div className="text-white text-base font-bold">{formatCost(totalSpent)}</div>
+                <div className="bg-purple-700 rounded px-3 py-1 border border-yellow-400 text-center">
+                  <div className="text-yellow-400 text-xs font-bold">TEAM VALUE</div>
+                  <div className="text-white text-base font-bold">{teamValue.toLocaleString()}</div>
                 </div>
                 <div className="bg-blue-800 rounded px-3 py-1 border border-yellow-400 text-center">
                   <div className="text-yellow-400 text-xs font-bold">PLAYERS</div>
@@ -439,7 +747,7 @@ export default function BloodBowlRoster() {
                 </div>
                 <div className="bg-green-700 rounded px-3 py-1 border border-yellow-400 text-center">
                   <div className="text-yellow-400 text-xs font-bold">LEFT</div>
-                  <div className={`text-base font-bold ${remaining < 0 ? 'text-red-300' : 'text-white'}`}>
+                  <div className={`text-base font-bold ${remaining < 0 ? 'text-red-600' : 'text-white'}`}>
                     {formatCost(remaining)}
                   </div>
                 </div>
@@ -459,7 +767,7 @@ export default function BloodBowlRoster() {
             ) : (
               <div className="overflow-x-auto">
                 <div className="mb-2 text-sm text-blue-900 font-semibold">
-                  💡 Drag rows to reorder players
+                  ðŸ’¡ Drag rows to reorder players
                 </div>
                 <table className="w-full border-collapse text-sm">
                   <thead>
@@ -472,7 +780,8 @@ export default function BloodBowlRoster() {
                       <th className="text-center p-2 text-white font-bold border border-blue-900">PA</th>
                       <th className="text-center p-2 text-white font-bold border border-blue-900">AV</th>
                       <th className="text-left p-2 text-white font-bold border border-blue-900">SKILLS</th>
-                      <th className="text-center p-2 text-white font-bold border border-blue-900">ACTIONS</th>
+                      <th className="text-left p-2 text-white font-bold border border-blue-900">ADDED SKILLS</th>
+                      <th className="text-center p-2 text-white font-bold border border-blue-900">ADD</th>
                       <th className="text-right p-2 text-white font-bold border border-blue-900">COST</th>
                     </tr>
                   </thead>
@@ -480,6 +789,7 @@ export default function BloodBowlRoster() {
                     {purchasedPlayers.map((player, idx) => {
                       const stats = player.s.split('/');
                       const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
+                      const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
                       
                       return (
                         <tr 
@@ -502,40 +812,48 @@ export default function BloodBowlRoster() {
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[2]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[3]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[4]}</td>
-                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">
-                            {/* Basic skills (normal text) */}
-                            {player.k && player.k !== '-' && <span>{player.k}</span>}
-                            {/* Primary added skills (blue, bold) */}
-                            {addedSkills.primary.map((skill, i) => (
-                              <span key={`p-${i}`}>
-                                {(player.k && player.k !== '-') || i > 0 ? ', ' : ''}
-                                <span className="text-blue-700 font-bold">{skill}</span>
-                              </span>
-                            ))}
-                            {/* Secondary added skills (red, bold) */}
-                            {addedSkills.secondary.map((skill, i) => (
-                              <span key={`s-${i}`}>
-                                {(player.k && player.k !== '-') || addedSkills.primary.length > 0 || i > 0 ? ', ' : ''}
-                                <span className="text-red-700 font-bold">{skill}</span>
-                              </span>
-                            ))}
-                            {!player.k && addedSkills.primary.length === 0 && addedSkills.secondary.length === 0 && '-'}
+                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">{player.k || '-'}</td>
+                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200">
+                            {allAddedSkills.length > 0 ? (
+                              <div className="flex flex-wrap gap-1">
+                                {addedSkills.primary.map((skill, i) => (
+                                  <span key={i} className="bg-blue-700 text-white px-1 rounded text-xs font-bold">
+                                    {skill}
+                                  </span>
+                                ))}
+                                {addedSkills.secondary.map((skill, i) => (
+                                  <span key={i} className="bg-green-600 text-white px-1 rounded text-xs font-bold">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : '-'}
                           </td>
-                          <td className="p-1.5 border border-blue-200 text-center">
+                          <td className="p-1.5 text-center border border-blue-200">
                             <button
-                              onClick={() => openSkillModal(player.id)}
-                              className="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-xs font-bold"
-                              title="Add skills"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openSkillModal(player.id);
+                              }}
+                              className="px-2 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-bold border border-blue-900"
                             >
-                              +SKILL
+                              +
                             </button>
                           </td>
-                          <td className="p-1.5 text-right text-blue-900 font-bold border border-blue-200 text-sm">{formatCost(player.c)}</td>
+                          <td className="p-1.5 text-right text-blue-900 font-bold border border-blue-200 text-sm">
+                            {formatCost(player.c + (addedSkills.primary.length * 20000) + (addedSkills.secondary.length * 40000))}
+                          </td>
                         </tr>
                       );
                     })}
                   </tbody>
                 </table>
+                <div className="mt-3 bg-blue-800 rounded p-3 border border-yellow-400">
+                  <div className="flex justify-between items-center">
+                    <span className="text-yellow-400 font-bold text-lg">TEAM VALUE (TV):</span>
+                    <span className="text-white font-bold text-xl">{teamValue.toLocaleString()}</span>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -559,19 +877,14 @@ export default function BloodBowlRoster() {
           const player = purchasedPlayers.find(p => p.id === selectedPlayerId);
           if (!player) return null;
           
-          const positionSkills = SKILL_ACCESS[selectedTeam]?.[player.n];
-          
+          const positionSkills = POSITION_SKILL_ACCESS[selectedTeam]?.[player.n];
           if (!positionSkills) {
             return (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeSkillModal}>
                 <div className="bg-white rounded-lg p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
                   <h2 className="text-xl font-bold text-red-600 mb-4">Skill Access Not Available</h2>
                   <p className="text-gray-700 mb-4">
-                    Cannot find skill access data for:<br/>
-                    <strong>Team:</strong> "{selectedTeam}"<br/>
-                    <strong>Position:</strong> "{player.n}"<br/>
-                    <br/>
-                    <small>Team exists in SKILL_ACCESS: {SKILL_ACCESS[selectedTeam] ? 'YES' : 'NO'}</small>
+                    Skill access data for {selectedTeam} - {player.n} is not yet configured.
                   </p>
                   <button
                     onClick={closeSkillModal}
@@ -585,31 +898,28 @@ export default function BloodBowlRoster() {
           }
           
           const addedSkills = playerSkills[selectedPlayerId] || { primary: [], secondary: [] };
-          
-          // Convert string categories to arrays (e.g., "GP" -> ["G", "P"])
-          const primaryCategories = positionSkills.prim ? positionSkills.prim.split('') : [];
-          const secondaryCategories = positionSkills.sec ? positionSkills.sec.split('') : [];
+          const basicSkills = player.k ? player.k.split(',').map(s => s.trim()) : [];
           
           return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={closeSkillModal}>
-              <div className="bg-blue-50 rounded-lg p-4 w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-3">
-                  <h2 className="text-xl font-bold text-blue-800">
+              <div className="bg-blue-50 rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-blue-800">
                     Add Skills to {player.n}
                   </h2>
                   <button
                     onClick={closeSkillModal}
-                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold leading-none"
+                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
                   >
-                    ×
+                    Ã—
                   </button>
                 </div>
                 
-                <div className="mb-3 p-2 bg-blue-100 rounded border border-blue-300">
-                  <h3 className="font-bold text-blue-900 text-sm mb-1">Current Added Skills:</h3>
-                  <div className="flex flex-wrap gap-1">
+                <div className="mb-4 p-3 bg-blue-100 rounded border border-blue-300">
+                  <h3 className="font-bold text-blue-900 mb-2">Current Added Skills:</h3>
+                  <div className="flex flex-wrap gap-2">
                     {addedSkills.primary.map((skill, i) => (
-                      <span key={i} className="bg-blue-600 text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">
+                      <span key={i} className="bg-blue-700 text-white px-2 py-1 rounded text-sm flex items-center gap-2 font-bold">
                         {skill}
                         <button
                           onClick={() => removeSkillFromPlayer(selectedPlayerId, skill)}
@@ -620,7 +930,7 @@ export default function BloodBowlRoster() {
                       </span>
                     ))}
                     {addedSkills.secondary.map((skill, i) => (
-                      <span key={i} className="bg-red-600 text-white px-2 py-0.5 rounded text-xs font-bold flex items-center gap-1">
+                      <span key={i} className="bg-green-600 text-white px-2 py-1 rounded text-sm flex items-center gap-2 font-bold">
                         {skill}
                         <button
                           onClick={() => removeSkillFromPlayer(selectedPlayerId, skill)}
@@ -631,17 +941,17 @@ export default function BloodBowlRoster() {
                       </span>
                     ))}
                     {addedSkills.primary.length === 0 && addedSkills.secondary.length === 0 && (
-                      <span className="text-gray-600 italic text-xs">No skills added yet</span>
+                      <span className="text-gray-600 italic">No skills added yet</span>
                     )}
                   </div>
                 </div>
                 
-                <div className="space-y-3">
-                  {/* Primary Skills Dropdown */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Primary Skills */}
                   <div>
-                    <label className="block text-sm font-bold text-blue-700 mb-1">
-                      Add Primary Skill (Cheaper)
-                    </label>
+                    <h3 className="text-lg font-bold text-blue-700 mb-2 pb-1 border-b-2 border-blue-700">
+                      Primary Skills (Adds 20k team value)
+                    </h3>
                     <select
                       onChange={(e) => {
                         if (e.target.value) {
@@ -649,20 +959,21 @@ export default function BloodBowlRoster() {
                           e.target.value = '';
                         }
                       }}
-                      className="w-full px-3 py-2 border-2 border-blue-300 rounded bg-blue-50 text-blue-900 font-semibold text-sm focus:outline-none focus:border-blue-500"
-                      defaultValue=""
+                      className="w-full p-2 border-2 border-blue-700 rounded bg-blue-50 text-blue-900 font-semibold"
                     >
-                      <option value="">Select a primary skill...</option>
-                      {primaryCategories.map(category => 
-                        SKILLS_BY_CATEGORY[category]?.map(skill => {
-                          const isAlreadyAdded = addedSkills.primary.includes(skill) || addedSkills.secondary.includes(skill);
+                      <option value="">-- Select Primary Skill --</option>
+                      {positionSkills.primary.map(category => 
+                        SKILLS_BY_CATEGORY[category].map(skill => {
+                          const isAdded = addedSkills.primary.includes(skill) || addedSkills.secondary.includes(skill);
+                          const isBasic = basicSkills.includes(skill);
+                          const isDisabled = isAdded || isBasic;
                           return (
                             <option 
                               key={skill} 
                               value={skill}
-                              disabled={isAlreadyAdded}
+                              disabled={isDisabled}
                             >
-                              {skill} ({category}){isAlreadyAdded ? ' - Already Added' : ''}
+                              {skill} ({category}) {isAdded ? 'âœ“ Added' : isBasic ? 'âœ“ Basic' : ''}
                             </option>
                           );
                         })
@@ -670,11 +981,11 @@ export default function BloodBowlRoster() {
                     </select>
                   </div>
                   
-                  {/* Secondary Skills Dropdown */}
+                  {/* Secondary Skills */}
                   <div>
-                    <label className="block text-sm font-bold text-red-700 mb-1">
-                      Add Secondary Skill (More Expensive)
-                    </label>
+                    <h3 className="text-lg font-bold text-green-700 mb-2 pb-1 border-b-2 border-green-700">
+                      Secondary Skills (Adds 40k team value)
+                    </h3>
                     <select
                       onChange={(e) => {
                         if (e.target.value) {
@@ -682,20 +993,21 @@ export default function BloodBowlRoster() {
                           e.target.value = '';
                         }
                       }}
-                      className="w-full px-3 py-2 border-2 border-red-300 rounded bg-red-50 text-red-900 font-semibold text-sm focus:outline-none focus:border-red-500"
-                      defaultValue=""
+                      className="w-full p-2 border-2 border-green-700 rounded bg-green-50 text-green-900 font-semibold"
                     >
-                      <option value="">Select a secondary skill...</option>
-                      {secondaryCategories.map(category => 
-                        SKILLS_BY_CATEGORY[category]?.map(skill => {
-                          const isAlreadyAdded = addedSkills.primary.includes(skill) || addedSkills.secondary.includes(skill);
+                      <option value="">-- Select Secondary Skill --</option>
+                      {positionSkills.secondary.map(category => 
+                        SKILLS_BY_CATEGORY[category].map(skill => {
+                          const isAdded = addedSkills.primary.includes(skill) || addedSkills.secondary.includes(skill);
+                          const isBasic = basicSkills.includes(skill);
+                          const isDisabled = isAdded || isBasic;
                           return (
                             <option 
                               key={skill} 
                               value={skill}
-                              disabled={isAlreadyAdded}
+                              disabled={isDisabled}
                             >
-                              {skill} ({category}){isAlreadyAdded ? ' - Already Added' : ''}
+                              {skill} ({category}) {isAdded ? 'âœ“ Added' : isBasic ? 'âœ“ Basic' : ''}
                             </option>
                           );
                         })
@@ -704,10 +1016,10 @@ export default function BloodBowlRoster() {
                   </div>
                 </div>
                 
-                <div className="mt-4 flex justify-end">
+                <div className="mt-6 flex justify-end">
                   <button
                     onClick={closeSkillModal}
-                    className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold text-sm"
+                    className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold"
                   >
                     Done
                   </button>
@@ -724,12 +1036,79 @@ export default function BloodBowlRoster() {
   if (viewMode === 'view') {
     return (
       <div className="min-h-screen bg-white p-8">
-        <style>{`
-          @media print {
-            .no-print { display: none !important; }
-            body { margin: 0; padding: 20px; }
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap');
+        * { font-family: 'Roboto Condensed', sans-serif; }
+        h1, h2, h3, button { font-family: 'Teko', sans-serif; letter-spacing: 0.5px; }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        /* Desktop layout (above 640px) */
+        .mobile-grid {
+          display: grid;
+          grid-template-columns: 4fr 5fr 3fr;
+          gap: 0.75rem;
+        }
+        
+        /* Tablet/Mobile layout (640px and below) */
+        @media (max-width: 640px) {
+          .mobile-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.75rem;
+            background-image: none !important;
           }
-        `}</style>
+          
+          .positions-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          
+          .players-col {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+          }
+          
+          .inducements-col {
+            grid-column: 1 / -1 !important;
+            grid-row: 2 !important;
+          }
+        }
+        
+        /* Small mobile layout (390px and below) - single column, smaller fonts */
+        @media (max-width: 390px) {
+          .mobile-grid {
+            grid-template-columns: 1fr !important;
+          }
+          
+          .positions-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          
+          .players-col {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+          }
+          
+          .inducements-col {
+            grid-column: 1 !important;
+            grid-row: 3 !important;
+          }
+          
+          h1 { font-size: 1.5rem !important; }
+          h2 { font-size: 1.25rem !important; }
+          h3 { font-size: 1rem !important; }
+          .text-2xl { font-size: 1.25rem !important; }
+          .text-xl { font-size: 1.125rem !important; }
+          .text-lg { font-size: 1rem !important; }
+          button { font-size: 0.875rem !important; padding: 0.25rem 0.5rem !important; }
+        }
+      `}</style>
         
         <div className="max-w-7xl mx-auto">
           <div className="no-print mb-6 flex gap-4">
@@ -758,7 +1137,7 @@ export default function BloodBowlRoster() {
             <div className="grid grid-cols-3 gap-4 mb-6 text-center">
               <div className="border border-gray-800 p-3">
                 <div className="text-sm font-semibold text-gray-600">Team Value</div>
-                <div className="text-2xl font-bold">{formatCost(totalSpent)}</div>
+                <div className="text-2xl font-bold">{teamValue.toLocaleString()}</div>
               </div>
               <div className="border border-gray-800 p-3">
                 <div className="text-sm font-semibold text-gray-600">Players</div>
@@ -783,15 +1162,28 @@ export default function BloodBowlRoster() {
                   </tr>
                 </thead>
                 <tbody>
-                  {purchasedPlayers.map((player, idx) => (
+                  {purchasedPlayers.map((player, idx) => {
+                    const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
+                    const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
+                    
+                    return (
                     <tr key={player.id} className="border-b border-gray-400">
                       <td className="p-2">{idx + 1}</td>
                       <td className="p-2 font-semibold">{player.n}</td>
                       <td className="p-2 font-mono text-sm">{player.s}</td>
-                      <td className="p-2 text-sm">{player.k || '-'}</td>
+                      <td className="p-2 text-sm">
+                        {player.k || '-'}
+                        {allAddedSkills.length > 0 && (
+                          <span className="font-bold">
+                            {player.k ? ', ' : ''}
+                            {allAddedSkills.join(', ')}
+                          </span>
+                        )}
+                      </td>
                       <td className="p-2 text-right">{formatCost(player.c)}</td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -838,21 +1230,126 @@ export default function BloodBowlRoster() {
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+        
+        
+        /* Custom scrollbar styling */
+        .custom-scroll::-webkit-scrollbar {
+          width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+          background: rgba(191, 219, 254, 0.3);
+          border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+          background: #93c5fd;
+          border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+          background: #60a5fa;
+        }
+        .custom-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: #93c5fd rgba(191, 219, 254, 0.3);
+        }
+        /* Desktop layout (above 640px) */
+        .mobile-grid {
+          display: grid;
+          grid-template-columns: 4fr 5fr 3fr;
+          gap: 0.75rem;
+        }
+        
+        /* Tablet/Mobile layout (640px and below) */
+        @media (max-width: 640px) {
+          .mobile-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.75rem;
+            background-image: none !important;
+          }
+          
+          .positions-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          
+          .players-col {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+          }
+          
+          .inducements-col {
+            grid-column: 1 / -1 !important;
+            grid-row: 2 !important;
+          }
+        }
+        
+        /* Small mobile layout (390px and below) - single column, smaller fonts */
+        @media (max-width: 390px) {
+          .mobile-grid {
+            grid-template-columns: 1fr !important;
+          }
+          
+          .positions-col {
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+          }
+          
+          .players-col {
+            grid-column: 1 !important;
+            grid-row: 2 !important;
+          }
+          
+          .inducements-col {
+            grid-column: 1 !important;
+            grid-row: 3 !important;
+          }
+          
+          h1 { font-size: 1.5rem !important; }
+          h2 { font-size: 1.25rem !important; }
+          h3 { font-size: 1rem !important; }
+          .text-2xl { font-size: 1.25rem !important; }
+          .text-xl { font-size: 1.125rem !important; }
+          .text-lg { font-size: 1rem !important; }
+          button { font-size: 0.875rem !important; padding: 0.25rem 0.5rem !important; }
+        }
       `}</style>
 
       <div className="max-w-[1800px] mx-auto">
         {/* Header with Title and Reset - Full width, no borders */}
         <div className="bg-gradient-to-r from-red-600 to-red-700 p-3 shadow-xl">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <h1 className="text-4xl font-bold text-white tracking-wide" style={{ textShadow: '3px 3px 6px rgba(0,0,0,0.8)' }}>
               BLOOD BOWL ROSTER BUILDER
             </h1>
-            <button 
-              onClick={resetRoster}
-              className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-lg transition-colors whitespace-nowrap border border-blue-900"
-            >
-              RESET ROSTER
-            </button>
+            <div className="flex items-center gap-3">
+              {/* League/Tournament Toggle */}
+              <div className="flex items-center gap-2 bg-blue-900 px-3 py-2 rounded border border-yellow-400">
+                <span className={`text-sm font-bold transition-colors ${playMode === 'league' ? 'text-yellow-400' : 'text-blue-300'}`}>
+                  LEAGUE
+                </span>
+                <button
+                  onClick={() => handlePlayModeChange(playMode === 'league' ? 'tournament' : 'league')}
+                  className={`relative w-14 h-7 rounded-full transition-colors ${
+                    playMode === 'tournament' ? 'bg-green-600' : 'bg-gray-400'
+                  }`}
+                >
+                  <div
+                    className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full transition-transform ${
+                      playMode === 'tournament' ? 'transform translate-x-7' : ''
+                    }`}
+                  />
+                </button>
+                <span className={`text-sm font-bold transition-colors ${playMode === 'tournament' ? 'text-yellow-400' : 'text-blue-300'}`}>
+                  TOURNAMENT
+                </span>
+              </div>
+              <button 
+                onClick={resetRoster}
+                className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-lg transition-colors whitespace-nowrap border border-blue-900"
+              >
+                RESET ROSTER
+              </button>
+            </div>
           </div>
         </div>
 
@@ -879,11 +1376,15 @@ export default function BloodBowlRoster() {
 
             <div className="flex gap-3 items-center">
               <div 
-                className="bg-blue-800 rounded px-4 py-2 border border-yellow-400 text-center cursor-pointer hover:bg-blue-700 transition-colors"
+                className={`bg-blue-100 rounded px-4 py-2 border-2 text-center transition-all ${
+                  playMode === 'tournament' ? 'border-blue-400 cursor-pointer hover:border-blue-600 hover:bg-blue-200' : 'border-blue-300 cursor-not-allowed'
+                }`}
                 onClick={handleTreasuryClick}
-                title="Click to edit"
+                title={playMode === 'league' ? 'Fixed at 1,000,000 gp in League mode' : 'Click to edit'}
               >
-                <div className="text-yellow-400 text-xs font-bold">STARTING TREASURY</div>
+                <div className="text-blue-600 text-xs font-bold flex items-center justify-center gap-1">
+                  STARTING TREASURY {playMode === 'league' ? '🔒' : '✏️'}
+                </div>
                 {isEditingTreasury ? (
                   <input
                     type="text"
@@ -891,7 +1392,7 @@ export default function BloodBowlRoster() {
                     onChange={handleTreasuryChange}
                     onBlur={handleTreasuryBlur}
                     autoFocus
-                    className="text-white text-xl font-bold bg-blue-900 text-center w-32 border border-yellow-400 rounded px-1"
+                    className="text-blue-900 text-xl font-bold bg-white text-center w-32 border border-blue-400 rounded px-1"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         setIsEditingTreasury(false);
@@ -899,16 +1400,16 @@ export default function BloodBowlRoster() {
                     }}
                   />
                 ) : (
-                  <div className="text-white text-xl font-bold">{formatCost(startingTreasury)}</div>
+                  <div className="text-blue-900 text-xl font-bold">{formatCost(startingTreasury)}</div>
                 )}
               </div>
-              <div className="bg-red-700 rounded px-4 py-2 border border-yellow-400 text-center">
-                <div className="text-yellow-400 text-xs font-bold">SPENT</div>
-                <div className="text-white text-xl font-bold">{formatCost(totalSpent)}</div>
+              <div className="bg-blue-100 rounded px-4 py-2 border-2 border-blue-300 text-center">
+                <div className="text-red-600 text-xs font-bold">SPENT</div>
+                <div className="text-gray-900 text-xl font-bold">{formatCost(totalSpent)}</div>
               </div>
-              <div className="bg-green-700 rounded px-4 py-2 border border-yellow-400 text-center">
-                <div className="text-yellow-400 text-xs font-bold">REMAINING</div>
-                <div className={`text-xl font-bold ${remaining < 0 ? 'text-red-300' : 'text-white'}`}>
+              <div className="bg-blue-100 rounded px-4 py-2 border-2 border-blue-300 text-center">
+                <div className="text-green-700 text-xs font-bold">REMAINING</div>
+                <div className={`text-xl font-bold ${remaining < 0 ? 'text-red-600' : 'text-gray-900'}`}>
                   {formatCost(remaining)}
                 </div>
               </div>
@@ -922,17 +1423,18 @@ export default function BloodBowlRoster() {
 
         <div className="px-2">{/* Wrapper for spacing on sides */}
 
-        <div className="grid grid-cols-12 gap-3">
+        <div className="mobile-grid" style={{backgroundImage: TEAM_BACKGROUNDS[selectedTeam] ? `url(${TEAM_BACKGROUNDS[selectedTeam]})` : "none", backgroundRepeat: "no-repeat", backgroundPosition: "center bottom", backgroundSize: "auto 60%", minHeight: "calc(100vh - 220px)"}}>
           {/* Available Positions - 30% (4 columns) */}
-          <div className="col-span-4">
-            <div className="bg-blue-50 rounded-lg p-3 shadow-xl border border-red-600">
-              <h2 className="text-2xl font-bold text-red-600 mb-2 pb-1 border-b border-blue-800">AVAILABLE POSITIONS</h2>
-              <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2" style={{scrollbarWidth: 'thin'}}>
+          <div className="positions-col">
+            <div className="bg-blue-50 rounded-lg p-3 shadow-xl border border-blue-800">
+              <h2 className="text-2xl font-bold text-blue-800 mb-2">AVAILABLE POSITIONS</h2>
+              <div className="text-sm text-blue-900 font-semibold mb-2 pb-1 border-b border-blue-800">{selectedTeam} team</div>
+              <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 custom-scroll">
                 {teamData.p.map((pos, idx) => {
                   const count = getPositionCount(pos.n);
                   const canBuy = remaining >= pos.c && count < pos.m;
                   return (
-                    <div key={idx} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-red-600 transition-colors">
+                    <div key={idx} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-800 transition-colors">
                       <div className="flex justify-between items-start gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
@@ -971,23 +1473,30 @@ export default function BloodBowlRoster() {
           </div>
 
           {/* Current Roster - 45% (5 columns) */}
-          <div className="col-span-5">
+          <div className="players-col">
             <div className="bg-blue-50 rounded-lg p-3 shadow-xl border border-blue-800">
-              <div className="flex justify-between items-center mb-2 pb-1 border-b border-red-600">
-                <h2 className="text-2xl font-bold text-blue-800">PLAYERS ({purchasedPlayers.length})</h2>
+              <div className="flex justify-between items-center mb-2 pb-1 border-b border-blue-800">
+                <div>
+                  <h2 className="text-2xl font-bold text-blue-800 mb-2">PLAYERS ({purchasedPlayers.length})</h2>
+                  <div className="text-sm text-blue-900 font-semibold">Team Value: {teamValue.toLocaleString()}</div>
+                </div>
                 <button 
                   onClick={() => setViewMode('roster')}
-                  className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-colors border border-blue-900"
+                  className="px-4 py-3 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-base transition-colors border border-blue-900 self-center"
                 >
-                  <Eye size={16} className="inline mr-1" />
+                  <Eye size={18} className="inline mr-1" />
                   VIEW ROSTER
                 </button>
               </div>
-              <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2" style={{scrollbarWidth: 'thin'}}>
+              <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 custom-scroll">
                 {purchasedPlayers.length === 0 ? (
                   <div className="text-gray-500 text-center py-8">No players purchased yet</div>
                 ) : (
-                  purchasedPlayers.map((player, idx) => (
+                  purchasedPlayers.map((player, idx) => {
+                    const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
+                    const hasAddedSkills = addedSkills.primary.length > 0 || addedSkills.secondary.length > 0;
+                    
+                    return (
                     <div key={player.id} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-600 transition-colors">
                       <div className="flex justify-between items-start gap-2">
                         <div className="flex-1 min-w-0">
@@ -1001,6 +1510,20 @@ export default function BloodBowlRoster() {
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
                             {player.k || '-'}
                           </div>
+                          {hasAddedSkills && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {addedSkills.primary.map((skill, i) => (
+                                <span key={`p-${i}`} className="bg-blue-700 text-white px-1 rounded text-xs font-bold">
+                                  {skill}
+                                </span>
+                              ))}
+                              {addedSkills.secondary.map((skill, i) => (
+                                <span key={`s-${i}`} className="bg-green-600 text-white px-1 rounded text-xs font-bold">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         <div className="text-right flex-shrink-0">
                           <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.c)}</div>
@@ -1013,69 +1536,80 @@ export default function BloodBowlRoster() {
                         </div>
                       </div>
                     </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>
           </div>
 
           {/* Inducements - 25% (3 columns) */}
-          <div className="col-span-3">
+          <div className="inducements-col">
             <div className="bg-blue-50 rounded-lg p-3 shadow-xl border border-blue-800">
-              <div className="flex justify-between items-center mb-2 pb-1 border-b border-red-600">
-                <h2 className="text-base font-bold text-blue-800 leading-tight">INDUCEMENTS</h2>
-                <button 
-                  onClick={() => setViewMode('view')}
-                  className="px-2 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-xs transition-colors border border-blue-900"
-                >
-                  <Printer size={14} className="inline" />
-                </button>
+              <div className="mb-2 pb-1 border-b border-blue-800">
+                <h2 className="text-2xl font-bold text-blue-800">INDUCEMENTS</h2>
               </div>
-              <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-1" style={{scrollbarWidth: 'thin'}}>
+              <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-1 custom-scroll">
                 {/* Rerolls */}
-                <div className="bg-blue-100 rounded p-2 border border-blue-200">
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="text-blue-900 font-bold text-sm">Rerolls</div>
-                    <div className="text-xs text-gray-600">{formatCost(teamData.r)}</div>
+                <div className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-600 transition-colors">
+                  <div className="flex justify-between items-start gap-2 mb-1">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-blue-900 truncate">Rerolls</h3>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-blue-800 font-bold text-sm">{formatCost(teamData.r)}</div>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between gap-1">
-                    <button
-                      onClick={() => updateInducement("Rerolls", -1)}
-                      className="px-2 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-bold border border-red-800"
-                    >
-                      <Minus size={12} />
-                    </button>
-                    <span className="text-blue-900 font-bold text-lg">{inducements["Rerolls"] || 0}</span>
-                    <button
-                      onClick={() => updateInducement("Rerolls", 1)}
-                      className="px-2 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-bold border border-blue-900"
-                    >
-                      <Plus size={12} />
-                    </button>
+                  <div className="flex justify-between items-center">
+                    <div className="text-blue-900 font-bold text-xl">{inducements["Rerolls"] || 0}</div>
+                    <div className="flex gap-1 justify-end" style={{minWidth: '90px'}}>
+                      {(inducements["Rerolls"] || 0) > 0 && (
+                        <button
+                          onClick={() => updateInducement("Rerolls", -1)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"
+                        >
+                          <Minus size={16} className="inline" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => updateInducement("Rerolls", 1)}
+                        className="px-3 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold text-sm transition-all border border-blue-900"
+                      >
+                        <Plus size={16} className="inline" />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Other Inducements */}
                 {INDUCEMENTS.map((ind) => (
-                  <div key={ind.name} className="bg-blue-100 rounded p-2 border border-blue-200">
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="text-blue-900 font-bold text-xs leading-tight">{ind.name}</div>
-                      <div className="text-xs text-gray-600 whitespace-nowrap">{formatCost(ind.cost)}</div>
+                  <div key={ind.name} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-600 transition-colors">
+                    <div className="flex justify-between items-start gap-2 mb-1">
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <h3 className="text-lg font-bold text-blue-900 truncate">{ind.name}</h3>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <div className="text-blue-800 font-bold text-sm">{formatCost(ind.cost)}</div>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between gap-1">
-                      <button
-                        onClick={() => updateInducement(ind.name, -1)}
-                        className="px-2 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-xs font-bold border border-red-800"
-                      >
-                        <Minus size={12} />
-                      </button>
-                      <span className="text-blue-900 font-bold">{inducements[ind.name] || 0}</span>
-                      <button
-                        onClick={() => updateInducement(ind.name, 1)}
-                        className="px-2 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded text-xs font-bold border border-blue-900"
-                      >
-                        <Plus size={12} />
-                      </button>
+                    <div className="flex justify-between items-center">
+                      <div className="text-blue-900 font-bold text-xl">{inducements[ind.name] || 0}</div>
+                      <div className="flex gap-1 justify-end" style={{minWidth: '90px'}}>
+                        {(inducements[ind.name] || 0) > 0 && (
+                          <button
+                            onClick={() => updateInducement(ind.name, -1)}
+                            className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"
+                          >
+                            <Minus size={16} className="inline" />
+                          </button>
+                        )}
+                        <button
+                          onClick={() => updateInducement(ind.name, 1)}
+                          className="px-3 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold text-sm transition-all border border-blue-900"
+                        >
+                          <Plus size={16} className="inline" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1087,8 +1621,8 @@ export default function BloodBowlRoster() {
         {/* Miniature Purchase Links */}
         {TEAM_MINIATURE_LINKS[selectedTeam] && (
           <div className="mt-3 bg-blue-50 rounded-lg p-3 shadow-xl border border-blue-800">
-            <h2 className="text-xl font-bold text-blue-800 mb-2 pb-1 border-b border-red-600">
-              WHERE TO BUY MINIATURES FOR {selectedTeam.toUpperCase()}
+            <h2 className="text-xl font-bold text-blue-800 mb-2 pb-1 border-b border-blue-800">
+              WHERE TO BUY MINIATURES FOR {selectedTeam.toUpperCase()} TEAMS
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {TEAM_MINIATURE_LINKS[selectedTeam].map((link, idx) => (
