@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft } from 'lucide-react';
 
 const STARTING_TREASURY = 1000000;
+const MAX_PLAYERS = 16;
 
 // Skills organized by category
 const SKILLS_BY_CATEGORY = {
@@ -526,6 +527,8 @@ const TEAM_BACKGROUNDS = {
   const purchasePlayer = (position) => {
     // Use a functional update so rapid clicks can't overspend.
     setPurchasedPlayers((prevPlayers) => {
+      if (prevPlayers.length >= MAX_PLAYERS) return prevPlayers;
+
       const spentNow = calcTotalSpentFrom(prevPlayers, inducements);
       const remainingNow = startingTreasury - spentNow;
       if (remainingNow < position.c) return prevPlayers;
@@ -1503,7 +1506,7 @@ const TEAM_BACKGROUNDS = {
               <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 custom-scroll">
                 {teamData.p.map((pos, idx) => {
                   const count = getPositionCount(pos.n);
-                  const canBuy = remaining >= pos.c && count < pos.m;
+                  const canBuy = remaining >= pos.c && count < pos.m && purchasedPlayers.length < MAX_PLAYERS;
                   return (
                     <div key={idx} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-800 transition-colors">
                       <div className="flex justify-between items-start gap-2">
