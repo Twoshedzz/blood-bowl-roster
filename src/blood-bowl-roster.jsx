@@ -532,7 +532,8 @@ const TEAM_BACKGROUNDS = {
 
     setInducements((prev) => {
       const current = prev[indName] || 0;
-      const newValue = Math.max(0, current + delta);
+      const maxAllowed = indName === "Apothecary" ? 1 : Number.POSITIVE_INFINITY;
+      const newValue = Math.max(0, Math.min(maxAllowed, current + delta));
       if (newValue === current) return prev;
 
       // Enforce budget for increases (prevents overspend on rapid clicks).
@@ -1652,9 +1653,9 @@ const TEAM_BACKGROUNDS = {
                         )}
                         <button
                           onClick={() => updateInducement(ind.name, 1)}
-                          disabled={remaining < ind.cost}
+                          disabled={remaining < ind.cost || (ind.name === 'Apothecary' && (inducements[ind.name] || 0) >= 1)}
                           className={`px-3 py-1 rounded font-bold text-sm transition-all border ${
-                            remaining >= ind.cost
+                            remaining >= ind.cost && !(ind.name === 'Apothecary' && (inducements[ind.name] || 0) >= 1)
                               ? 'bg-blue-700 hover:bg-blue-600 text-white cursor-pointer border-blue-900'
                               : 'bg-gray-400 text-gray-600 cursor-not-allowed border-gray-500'
                           }`}
