@@ -491,13 +491,36 @@ const TEAM_BACKGROUNDS = {
 
   const remaining = startingTreasury - totalSpent;
 
+  const calcTotalSpentFrom = (players, indState) => {
+    let cost = 0;
+    players.forEach((p) => {
+      cost += p.c;
+    });
+
+    const rerollCount = indState["Rerolls"] || 0;
+    cost += rerollCount * teamData.r;
+
+    INDUCEMENTS.forEach((ind) => {
+      const count = indState[ind.name] || 0;
+      cost += count * ind.cost;
+    });
+
+    return cost;
+  };
+
   const purchasePlayer = (position) => {
-    if (remaining < position.c) return;
-    const currentCount = purchasedPlayers.filter(p => p.n === position.n).length;
-    if (currentCount >= position.m) return;
-    const newPlayer = { ...position, id: Date.now() + Math.random() };
-    setPurchasedPlayers([...purchasedPlayers, newPlayer]);
-    console.log('Player purchased:', newPlayer, 'Total players:', purchasedPlayers.length + 1);
+    // Use a functional update so rapid clicks can't overspend.
+    setPurchasedPlayers((prevPlayers) => {
+      const spentNow = calcTotalSpentFrom(prevPlayers, inducements);
+      const remainingNow = startingTreasury - spentNow;
+      if (remainingNow < position.c) return prevPlayers;
+
+      const currentCount = prevPlayers.filter((p) => p.n === position.n).length;
+      if (currentCount >= position.m) return prevPlayers;
+
+      const newPlayer = { ...position, id: Date.now() + Math.random() };
+      return [...prevPlayers, newPlayer];
+    });
   };
 
   const removePlayer = (playerId) => {
@@ -505,9 +528,27 @@ const TEAM_BACKGROUNDS = {
   };
 
   const updateInducement = (indName, delta) => {
-    setInducements(prev => {
+    if (!delta) return;
+
+    setInducements((prev) => {
       const current = prev[indName] || 0;
       const newValue = Math.max(0, current + delta);
+      if (newValue === current) return prev;
+
+      // Enforce budget for increases (prevents overspend on rapid clicks).
+      if (newValue > current) {
+        const unitCost =
+          indName === "Rerolls"
+            ? teamData.r
+            : (INDUCEMENTS.find((ind) => ind.name === indName)?.cost ?? 0);
+        const costIncrease = (newValue - current) * unitCost;
+
+        const spentNow = calcTotalSpentFrom(purchasedPlayers, prev);
+        if (spentNow + costIncrease > startingTreasury) {
+          return prev;
+        }
+      }
+
       return { ...prev, [indName]: newValue };
     });
   };
@@ -1574,7 +1615,12 @@ const TEAM_BACKGROUNDS = {
                       )}
                       <button
                         onClick={() => updateInducement("Rerolls", 1)}
-                        className="px-3 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold text-sm transition-all border border-blue-900"
+                        disabled={remaining < teamData.r}
+                        className={`px-3 py-1 rounded font-bold text-sm transition-all border ${
+                          remaining >= teamData.r
+                            ? 'bg-blue-700 hover:bg-blue-600 text-white cursor-pointer border-blue-900'
+                            : 'bg-gray-400 text-gray-600 cursor-not-allowed border-gray-500'
+                        }`}
                       >
                         <Plus size={16} className="inline" />
                       </button>
@@ -1606,7 +1652,12 @@ const TEAM_BACKGROUNDS = {
                         )}
                         <button
                           onClick={() => updateInducement(ind.name, 1)}
-                          className="px-3 py-1 bg-blue-700 hover:bg-blue-600 text-white rounded font-bold text-sm transition-all border border-blue-900"
+                          disabled={remaining < ind.cost}
+                          className={`px-3 py-1 rounded font-bold text-sm transition-all border ${
+                            remaining >= ind.cost
+                              ? 'bg-blue-700 hover:bg-blue-600 text-white cursor-pointer border-blue-900'
+                              : 'bg-gray-400 text-gray-600 cursor-not-allowed border-gray-500'
+                          }`}
                         >
                           <Plus size={16} className="inline" />
                         </button>
