@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft } from 'lucide-react';
 
 const STARTING_TREASURY = 1000000;
@@ -367,9 +367,18 @@ const TEAM_MINIATURE_LINKS = {
 };
 
 // Base inducements (cost can vary by team)
+const TEAMS_WITHOUT_APOTHECARY = new Set([
+  "Nurgle",
+  "Shambling Undead",
+  "Necromantic Horror",
+  "Tomb King",
+  // Common pluralization
+  "Tomb Kings",
+]);
+
 const getInducements = (teamName) => {
   const bribeCost = teamName === "Goblin" ? 50000 : 100000;
-  return [
+  const base = [
     {name:"Bribes", cost: bribeCost},
     {name:"Apothecary", cost:50000},
     {name:"Coaches", cost:10000},
@@ -378,6 +387,12 @@ const getInducements = (teamName) => {
     {name:"Kegs", cost:50000},
     {name:"Masterchef", cost:300000}
   ];
+
+  if (TEAMS_WITHOUT_APOTHECARY.has(teamName)) {
+    return base.filter((ind) => ind.name !== "Apothecary");
+  }
+
+  return base;
 };
 
 // Blood Bowl 2025 Edition team data: l=league, r=reroll cost, p=positions, n=name, c=cost, m=max, s=stats, k=skills
@@ -532,7 +547,10 @@ const TEAM_BACKGROUNDS = {
 
     setInducements((prev) => {
       const current = prev[indName] || 0;
-      const maxAllowed = indName === "Apothecary" ? 1 : Number.POSITIVE_INFINITY;
+      const maxAllowed =
+        indName === "Apothecary"
+          ? (TEAMS_WITHOUT_APOTHECARY.has(selectedTeam) ? 0 : 1)
+          : Number.POSITIVE_INFINITY;
       const newValue = Math.max(0, Math.min(maxAllowed, current + delta));
       if (newValue === current) return prev;
 
@@ -553,6 +571,16 @@ const TEAM_BACKGROUNDS = {
       return { ...prev, [indName]: newValue };
     });
   };
+
+  // Safety: if team disallows apothecary, force it back to 0.
+  useEffect(() => {
+    if (!TEAMS_WITHOUT_APOTHECARY.has(selectedTeam)) return;
+    setInducements((prev) => {
+      if (!prev.Apothecary) return prev;
+      const { Apothecary, ...rest } = prev;
+      return rest;
+    });
+  }, [selectedTeam]);
 
   const handleTeamChange = (team) => {
     // Always reset roster when changing teams
