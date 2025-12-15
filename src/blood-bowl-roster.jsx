@@ -558,6 +558,8 @@ const TEAM_BACKGROUNDS = {
       const maxAllowed =
         indName === "Apothecary"
           ? (TEAMS_WITHOUT_APOTHECARY.has(selectedTeam) ? 0 : 1)
+          : indName === "Fans"
+          ? 3
           : Number.POSITIVE_INFINITY;
       const newValue = Math.max(0, Math.min(maxAllowed, current + delta));
       if (newValue === current) return prev;
@@ -1689,9 +1691,9 @@ const TEAM_BACKGROUNDS = {
                         )}
                         <button
                           onClick={() => updateInducement(ind.name, 1)}
-                          disabled={remaining < ind.cost || (ind.name === 'Apothecary' && (inducements[ind.name] || 0) >= 1)}
+                          disabled={remaining < ind.cost || (ind.name === 'Apothecary' && (inducements[ind.name] || 0) >= 1) || (ind.name === 'Fans' && (inducements[ind.name] || 0) >= 3)}
                           className={`px-3 py-1 rounded font-bold text-sm transition-all border ${
-                            remaining >= ind.cost && !(ind.name === 'Apothecary' && (inducements[ind.name] || 0) >= 1)
+                            remaining >= ind.cost && !(ind.name === 'Apothecary' && (inducements[ind.name] || 0) >= 1) && !(ind.name === 'Fans' && (inducements[ind.name] || 0) >= 3)
                               ? 'bg-blue-700 hover:bg-blue-600 text-white cursor-pointer border-blue-900'
                               : 'bg-gray-400 text-gray-600 cursor-not-allowed border-gray-500'
                           }`}
