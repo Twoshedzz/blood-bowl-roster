@@ -1863,7 +1863,7 @@ const TEAM_BACKGROUNDS = {
                     <div className="flex justify-between items-center">
                       <div className="text-blue-900 font-bold text-xl">{inducements[ind.name] || 0}</div>
                       <div className="flex gap-1 justify-end" style={{minWidth: '90px'}}>
-                        {(inducements[ind.name] || 0) > 0 && (
+                        {(inducements[ind.name] || 0) > (ind.name === 'Fans' ? 1 : 0) && (
                           <button
                             onClick={() => updateInducement(ind.name, -1)}
                             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"
