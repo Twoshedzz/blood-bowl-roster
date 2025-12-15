@@ -378,7 +378,12 @@ const TEAMS_WITHOUT_APOTHECARY = new Set([
 ]);
 
 const getInducements = (teamName) => {
-  const bribeCost = teamName === "Goblin" ? 50000 : 100000;
+  let bribeCost = 100000;
+  if (teamName === "Goblin") {
+    bribeCost = 50000;
+  } else if (teamName === "Dwarf") {
+    bribeCost = 60000;
+  }
   const base = [
     {name:"Bribes", cost: bribeCost},
     {name:"Apothecary", cost:50000},
