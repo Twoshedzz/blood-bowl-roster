@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft } from 'lucide-react';
+import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft, Share2, Check } from 'lucide-react';
 
 const STARTING_TREASURY = 1000000;
 const MAX_PLAYERS = 16;
@@ -382,7 +382,7 @@ const getInducements = (teamName) => {
   if (teamName === "Goblin") {
     bribeCost = 50000;
   } else if (teamName === "Dwarf") {
-    bribeCost = 60000;
+    bribeCost = 50000; // Dwarf teams have "Bribery and Corruption" special rule
   }
   const base = [
     {name:"Bribes", cost: bribeCost},
@@ -446,6 +446,55 @@ export default function BloodBowlRoster() {
   const [playerSkills, setPlayerSkills] = useState({}); // { playerId: { primary: [], secondary: [] } }
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
   const [showSkillModal, setShowSkillModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  // Load team from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const teamData = params.get('team');
+    if (teamData) {
+      try {
+        const decoded = JSON.parse(atob(teamData));
+        setSelectedTeam(decoded.team);
+        setPurchasedPlayers(decoded.players || []);
+        setInducements(decoded.inducements || {Fans: 1});
+        setPlayerSkills(decoded.skills || {});
+        setStartingTreasury(decoded.treasury || STARTING_TREASURY);
+        setPlayMode(decoded.playMode || 'league');
+      } catch (e) {
+        console.error('Failed to load team from URL:', e);
+      }
+    }
+  }, []);
+
+  // Generate shareable URL
+  const generateShareUrl = () => {
+    const teamState = {
+      team: selectedTeam,
+      players: purchasedPlayers,
+      inducements,
+      skills: playerSkills,
+      treasury: startingTreasury,
+      playMode
+    };
+    const encoded = btoa(JSON.stringify(teamState));
+    const url = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
+    setShareUrl(url);
+    setShowShareModal(true);
+    setCopied(false);
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
 // Team background images - using public folder (move images to public/images/)
 const BASE_URL = import.meta.env.BASE_URL;
@@ -814,6 +863,13 @@ const TEAM_BACKGROUNDS = {
               <Printer size={18} />
               PRINT
             </button>
+            <button 
+              onClick={generateShareUrl}
+              className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg font-bold text-base flex items-center gap-2 transition-colors border border-blue-900"
+            >
+              <Share2 size={18} />
+              SHARE
+            </button>
           </div>
 
           <div className="bg-blue-50 rounded-lg p-3 shadow-xl border border-red-600">
@@ -1114,6 +1170,69 @@ const TEAM_BACKGROUNDS = {
             </div>
           );
         })()}
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowShareModal(false)}>
+            <div className="bg-blue-50 rounded-lg p-6 max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-blue-800 flex items-center gap-2">
+                  <Share2 size={24} />
+                  Share Your Team
+                </h2>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <p className="text-gray-700 mb-4">
+                Copy this link to share your <strong>{selectedTeam}</strong> team with others:
+              </p>
+              
+              <div className="bg-white border-2 border-blue-300 rounded p-3 mb-4 break-all font-mono text-sm">
+                {shareUrl}
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={copyToClipboard}
+                  className={`flex-1 px-4 py-3 rounded font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                    copied 
+                      ? 'bg-green-600 text-white' 
+                      : 'bg-blue-700 hover:bg-blue-600 text-white'
+                  }`}
+                >
+                  {copied ? (
+                    <>
+                      <Check size={20} />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Share2 size={20} />
+                      Copy to Clipboard
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded font-bold text-lg"
+                >
+                  Close
+                </button>
+              </div>
+              
+              <div className="mt-4 p-3 bg-blue-100 rounded border border-blue-300">
+                <p className="text-sm text-blue-900">
+                  <strong>💡 Tip:</strong> Anyone with this link can view and edit this team. The link contains all your team data, so no login is required!
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -1211,6 +1330,13 @@ const TEAM_BACKGROUNDS = {
             >
               <Printer size={20} />
               Print/PDF
+            </button>
+            <button 
+              onClick={generateShareUrl}
+              className="px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg font-semibold flex items-center gap-2"
+            >
+              <Share2 size={20} />
+              Share Team
             </button>
           </div>
 
@@ -1566,13 +1692,22 @@ const TEAM_BACKGROUNDS = {
                   <h2 className="text-2xl font-bold text-blue-800 mb-2">PLAYERS ({purchasedPlayers.length})</h2>
                   <div className="text-sm text-blue-900 font-semibold">Team Value: {teamValue.toLocaleString()}</div>
                 </div>
-                <button 
-                  onClick={() => setViewMode('roster')}
-                  className="px-4 py-3 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-base transition-colors border border-blue-900 self-center"
-                >
-                  <Eye size={18} className="inline mr-1" />
-                  VIEW ROSTER
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setViewMode('roster')}
+                    className="px-4 py-3 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-base transition-colors border border-blue-900"
+                  >
+                    <Eye size={18} className="inline mr-1" />
+                    VIEW ROSTER
+                  </button>
+                  <button 
+                    onClick={generateShareUrl}
+                    className="px-4 py-3 bg-green-600 hover:bg-green-500 text-white rounded font-bold text-base transition-colors border border-blue-900"
+                  >
+                    <Share2 size={18} className="inline mr-1" />
+                    SHARE
+                  </button>
+                </div>
               </div>
               <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 custom-scroll">
                 {purchasedPlayers.length === 0 ? (
