@@ -449,6 +449,8 @@ export default function BloodBowlRoster() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  const [shorteningUrl, setShorteningUrl] = useState(false);
+  const [shortenError, setShortenError] = useState(false);
 
   // Load team from URL on mount
   useEffect(() => {
@@ -470,7 +472,7 @@ export default function BloodBowlRoster() {
   }, []);
 
   // Generate shareable URL
-  const generateShareUrl = () => {
+  const generateShareUrl = async () => {
     const teamState = {
       team: selectedTeam,
       players: purchasedPlayers,
@@ -480,10 +482,31 @@ export default function BloodBowlRoster() {
       playMode
     };
     const encoded = btoa(JSON.stringify(teamState));
-    const url = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
-    setShareUrl(url);
+    const longUrl = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
+    
+    // Show modal immediately with long URL
+    setShareUrl(longUrl);
     setShowShareModal(true);
     setCopied(false);
+    setShorteningUrl(true);
+    setShortenError(false);
+    
+    // Try to shorten the URL
+    try {
+      const response = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
+      const data = await response.json();
+      
+      if (data.shorturl) {
+        setShareUrl(data.shorturl);
+      } else {
+        setShortenError(true);
+      }
+    } catch (error) {
+      console.error('Failed to shorten URL:', error);
+      setShortenError(true);
+    } finally {
+      setShorteningUrl(false);
+    }
   };
 
   const copyToClipboard = async () => {
@@ -624,7 +647,11 @@ const TEAM_BACKGROUNDS = {
           indName === "Rerolls"
             ? teamData.r
             : (INDUCEMENTS.find((ind) => ind.name === indName)?.cost ?? 0);
-        const costIncrease = (newValue - current) * unitCost;
+        
+        // Calculate actual chargeable count difference (accounting for free first fan)
+        const currentChargeable = indName === "Fans" ? Math.max(0, current - 1) : current;
+        const newChargeable = indName === "Fans" ? Math.max(0, newValue - 1) : newValue;
+        const costIncrease = (newChargeable - currentChargeable) * unitCost;
 
         const spentNow = calcTotalSpentFrom(purchasedPlayers, prev);
         if (spentNow + costIncrease > startingTreasury) {
@@ -1192,9 +1219,24 @@ const TEAM_BACKGROUNDS = {
                 Copy this link to share your <strong>{selectedTeam}</strong> team with others:
               </p>
               
+              {shorteningUrl && (
+                <div className="bg-blue-100 border-2 border-blue-300 rounded p-3 mb-4 text-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-700"></div>
+                    <span className="text-blue-700 font-semibold">Creating short link...</span>
+                  </div>
+                </div>
+              )}
+              
               <div className="bg-white border-2 border-blue-300 rounded p-3 mb-4 break-all font-mono text-sm">
                 {shareUrl}
               </div>
+              
+              {shortenError && (
+                <div className="bg-yellow-100 border border-yellow-400 rounded p-2 mb-4 text-sm text-yellow-800">
+                  ⚠️ Couldn't create short link. Using full URL instead.
+                </div>
+              )}
               
               <div className="flex gap-3">
                 <button
