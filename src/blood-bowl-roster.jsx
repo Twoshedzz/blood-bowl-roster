@@ -71,8 +71,8 @@ const POSITION_SKILL_ACCESS = {
   },
   "Dwarf": {
     "Lineman": { primary: ["D", "G"], secondary: ["S"] },
-    "Runner": { primary: ["G", "P"], secondary: ["S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["P"] },
+    "Runner": { primary: ["G", "P"], secondary: ["D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["D", "P"] },
     "Troll Slayer": { primary: ["G", "S"], secondary: ["D"] },
     "Deathroller": { primary: ["D", "S"], secondary: ["G"] },
   },
