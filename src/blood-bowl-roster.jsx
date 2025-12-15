@@ -71,8 +71,8 @@ const POSITION_SKILL_ACCESS = {
   },
   "Dwarf": {
     "Lineman": { primary: ["D", "G"], secondary: ["S"] },
-    "Runner": { primary: ["G", "P"], secondary: ["S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["P"] },
+    "Runner": { primary: ["G", "P"], secondary: ["D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["D", "P"] },
     "Troll Slayer": { primary: ["G", "S"], secondary: ["D"] },
     "Deathroller": { primary: ["D", "S"], secondary: ["G"] },
   },
@@ -378,7 +378,10 @@ const TEAMS_WITHOUT_APOTHECARY = new Set([
 ]);
 
 const getInducements = (teamName) => {
-  const bribeCost = teamName === "Goblin" ? 50000 : 100000;
+  const bribeCost =
+    teamName === "Goblin" || teamName === "Dwarf" || teamName === "Chaos Dwarf"
+      ? 50000
+      : 100000;
   const base = [
     {name:"Bribes", cost: bribeCost},
     {name:"Apothecary", cost:50000},
