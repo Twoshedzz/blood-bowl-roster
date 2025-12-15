@@ -389,7 +389,7 @@ const getInducements = (teamName) => {
     {name:"Apothecary", cost:50000},
     {name:"Coaches", cost:10000},
     {name:"Cheerleaders", cost:10000},
-    {name:"Fans", cost:10000},
+    {name:"Fans", cost:5000},
     {name:"Kegs", cost:50000},
     {name:"Masterchef", cost:300000}
   ];
@@ -437,7 +437,7 @@ const T = {
 export default function BloodBowlRoster() {
   const [selectedTeam, setSelectedTeam] = useState("Human");
   const [purchasedPlayers, setPurchasedPlayers] = useState([]);
-  const [inducements, setInducements] = useState({});
+  const [inducements, setInducements] = useState({Fans: 1}); // Start with 1 free dedicated fan
   const [viewMode, setViewMode] = useState('build');
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [playMode, setPlayMode] = useState('league'); // 'league' or 'tournament'
@@ -491,7 +491,9 @@ const TEAM_BACKGROUNDS = {
     cost += rerollCount * teamData.r;
     INDUCEMENTS.forEach(ind => {
       const count = inducements[ind.name] || 0;
-      cost += count * ind.cost;
+      // First dedicated fan is free, so subtract 1 from count before calculating cost
+      const chargeableCount = ind.name === "Fans" ? Math.max(0, count - 1) : count;
+      cost += chargeableCount * ind.cost;
     });
     return cost;
   }, [purchasedPlayers, inducements, teamData]);
@@ -523,7 +525,9 @@ const TEAM_BACKGROUNDS = {
 
     INDUCEMENTS.forEach((ind) => {
       const count = indState[ind.name] || 0;
-      cost += count * ind.cost;
+      // First dedicated fan is free, so subtract 1 from count before calculating cost
+      const chargeableCount = ind.name === "Fans" ? Math.max(0, count - 1) : count;
+      cost += chargeableCount * ind.cost;
     });
 
     return cost;
@@ -555,13 +559,14 @@ const TEAM_BACKGROUNDS = {
 
     setInducements((prev) => {
       const current = prev[indName] || 0;
+      const minAllowed = indName === "Fans" ? 1 : 0; // Can't go below 1 for Fans (the free starting fan)
       const maxAllowed =
         indName === "Apothecary"
           ? (TEAMS_WITHOUT_APOTHECARY.has(selectedTeam) ? 0 : 1)
           : indName === "Fans"
           ? 3
           : Number.POSITIVE_INFINITY;
-      const newValue = Math.max(0, Math.min(maxAllowed, current + delta));
+      const newValue = Math.max(minAllowed, Math.min(maxAllowed, current + delta));
       if (newValue === current) return prev;
 
       // Enforce budget for increases (prevents overspend on rapid clicks).
@@ -596,7 +601,7 @@ const TEAM_BACKGROUNDS = {
     // Always reset roster when changing teams
     setSelectedTeam(team);
     setPurchasedPlayers([]);
-    setInducements({});
+    setInducements({Fans: 1}); // Start with 1 free dedicated fan
   };
 
   const handlePlayModeChange = (mode) => {
@@ -608,7 +613,7 @@ const TEAM_BACKGROUNDS = {
 
   const resetRoster = () => {
     setPurchasedPlayers([]);
-    setInducements({});
+    setInducements({Fans: 1}); // Start with 1 free dedicated fan
     setStartingTreasury(STARTING_TREASURY);
   };
 
