@@ -8,10 +8,5 @@ export default defineConfig({
   // https://<user>.github.io/<repo>/
   base: '/blood-bowl-roster/',
   plugins: [react(), tailwindcss()],
-  test: {
-    globals: true,
-    environment: 'happy-dom',
-    setupFiles: './src/test/setup.js',
-  },
 })
 
