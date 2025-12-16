@@ -132,14 +132,14 @@ async function scrapeStarPlayer(slug) {
       }
       
       // Second row - get stat values
-      // NOTE: This row has 5 cells (no cost cell), values are MA, ST, AG, PA, AV
+      // NOTE: This row has 6 cells (first cell is empty for alignment), values are in cells 1-5
       const dataCells = $(rows[1]).find('td');
-      if (dataCells.length >= 5) {
-        ma = $(dataCells[0]).text().trim();
-        st = $(dataCells[1]).text().trim();
-        ag = $(dataCells[2]).text().trim();
-        pa = $(dataCells[3]).text().trim();
-        av = $(dataCells[4]).text().trim();
+      if (dataCells.length >= 6) {
+        ma = $(dataCells[1]).text().trim(); // Cell 1: MA
+        st = $(dataCells[2]).text().trim(); // Cell 2: ST
+        ag = $(dataCells[3]).text().trim(); // Cell 3: AG
+        pa = $(dataCells[4]).text().trim(); // Cell 4: PA
+        av = $(dataCells[5]).text().trim(); // Cell 5: AV
       }
     }
     
