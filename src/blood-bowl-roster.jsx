@@ -1,438 +1,24 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft, Share2, Check } from 'lucide-react';
 
-const STARTING_TREASURY = 1000000;
-const MAX_PLAYERS = 16;
+// Import refactored data
+import { STARTING_TREASURY, MAX_PLAYERS, getInducements, TEAMS_WITHOUT_APOTHECARY } from './data/constants';
+import { SKILLS_BY_CATEGORY } from './data/skills';
+import { TEAMS, TEAM_NAMES, getPositionSkillAccess } from './data/teams/index';
 
-// Skills organized by category
-const SKILLS_BY_CATEGORY = {
-  A: ["Catch", "Diving Catch", "Diving Tackle", "Dodge", "Defensive", "Hit and Run", "Jump Up", "Leap", "Safe Pair of Hands", "Sidestep", "Sprint", "Sure Feet"],
-  D: ["Dirty Player", "Eye Gouge", "Fumblerooski", "Lethal Flight", "Lone Fouler", "Pile Driver", "Put the Boot In", "Quick Foul", "Saboteur", "Shadowing", "Sneaky Git", "Violent Innovator"],
-  G: ["Block", "Dauntless", "Fend", "Frenzy", "Kick", "Pro", "Steady Footing", "Strip Ball", "Sure Hands", "Tackle", "Taunt", "Wrestle"],
-  M: ["Big Hand", "Claws", "Disturbing Presence", "Extra Arms", "Foul Appearance", "Horns", "Iron Hard Skin", "Monstrous Mouth", "Prehensile Tail", "Tentacles", "Two Heads", "Very Long Legs"],
-  P: ["Accurate", "Cannoneer", "Cloud Burster", "Dump-off", "Give and Go", "Hail Mary Pass", "Leader", "Nerves of Steel", "On the Ball", "Pass", "Punt", "Safe Pass"],
-  S: ["Arm Bar", "Brawler", "Break Tackle", "Bullseye", "Grab", "Guard", "Juggernaut", "Mighty Blow", "Multiple Block", "Stand Firm", "Strong Arm", "Thick Skull"]
-};
+// ALL OLD DATA STRUCTURES REMOVED - NOW IMPORTED FROM data/ FOLDER
+// All team data, skills, and constants have been refactored into separate modules for easier maintenance
+// See: src/data/teams/, src/data/skills.js, src/data/constants.js, src/data/leagues.js
 
-// Position skill access - this would need to be added to each team's position data
-// For now, I'll create a structure to store this separately
-// Format: { teamName: { positionName: { primary: ['A', 'G'], secondary: ['S', 'P'] } } }
-const POSITION_SKILL_ACCESS = {
-  "Amazon": {
-    "Lino": { primary: ["G"], secondary: ["A", "S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
-    "Blitzer": { primary: ["A", "G"], secondary: ["S"] },
-    "Blocker": { primary: ["G", "S"], secondary: ["A"] },
-  },
-  "Black Orc": {
-    "Goblin": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
-    "Black Orc": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Bretonnian": {
-    "Squire": { primary: ["G"], secondary: ["A", "S"] },
-    "Catcher": { primary: ["A", "G"], secondary: ["S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
-    "Grail Knight": { primary: ["G", "S"], secondary: ["A"] },
-  },
-  "Chaos Chosen": {
-    "Beastman": { primary: ["G", "M"], secondary: ["A", "D", "P", "S"] },
-    "Chosen": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
-    "Troll": { primary: ["M", "S"], secondary: ["A", "G", "P"] },
-    "Ogre": { primary: ["M", "S"], secondary: ["A", "G"] },
-    "Minotaur": { primary: ["M", "S"], secondary: ["A", "G"] },
-  },
-  "Chaos Dwarf": {
-    "Hobgoblin": { primary: ["D"], secondary: ["A", "G", "S"] },
-    "Stabba": { primary: ["D", "G"], secondary: ["A", "S"] },
-    "Blocker": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
-    "Flamer": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
-    "Bull Centaur": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
-    "Minotaur": { primary: ["M", "S"], secondary: ["A", "G"] },
-  },
-  "Chaos Renegade": {
-    "Lineman": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
-    "Goblin": { primary: ["A", "D", "M"], secondary: ["G", "P"] },
-    "Orc": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
-    "Skaven": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
-    "DarkElf": { primary: ["A", "D", "G", "M"], secondary: ["S"] },
-    "Thrower": { primary: ["D", "G", "M", "P"], secondary: ["A", "S"] },
-    "Troll": { primary: ["S"], secondary: ["A", "G", "P", "M"] },
-    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
-    "Minotaur": { primary: ["S"], secondary: ["A", "G", "M"] },
-    "RatOgre": { primary: ["S"], secondary: ["A", "G", "M"] },
-  },
-  "Dark Elf": {
-    "Lineman": { primary: ["A", "G"], secondary: ["D", "S"] },
-    "Runner": { primary: ["A", "G", "P"], secondary: ["D", "S"] },
-    "Assassin": { primary: ["A", "D"], secondary: ["G", "S"] },
-    "Blitzer": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
-    "Witch Elf": { primary: ["A", "G"], secondary: ["D", "S"] },
-  },
-  "Dwarf": {
-    "Lineman": { primary: ["D", "G"], secondary: ["S"] },
-    "Runner": { primary: ["G", "P"], secondary: ["D", "S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["D", "P"] },
-    "Troll Slayer": { primary: ["G", "S"], secondary: ["D"] },
-    "Deathroller": { primary: ["D", "S"], secondary: ["G"] },
-  },
-  "Elf Union": {
-    "Lineman": { primary: ["A", "G"], secondary: ["S"] },
-    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
-    "Catcher": { primary: ["A", "G"], secondary: ["S"] },
-    "Blitzer": { primary: ["A", "G"], secondary: ["P", "S"] },
-  },
-  "Gnome": {
-    "Lineman": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Illusionist": { primary: ["A", "P"], secondary: ["D", "G"] },
-    "Beastmaster": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Goblin": {
-    "Lineman": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
-    "Loony": { primary: ["D"], secondary: ["A", "G", "S"] },
-    "Bomma": { primary: ["D", "P"], secondary: ["A", "G", "S"] },
-    "Ooligan": { primary: ["A", "D"], secondary: ["G", "S"] },
-    "Doom Diver": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Fanatic": { primary: ["D", "S"], secondary: ["A", "G"] },
-    "Pogoer": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Halfling": {
-    "Lineman": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Hefty": { primary: ["A", "P"], secondary: ["D", "G", "S"] },
-    "Catcher": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Human": {
-    "Lineman": { primary: ["G"], secondary: ["A", "D", "S"] },
-    "Halfling": { primary: ["A"], secondary: ["D", "G", "S"] },
-    "Catcher": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
-  },
-  "Imperial Nobility": {
-    "Retainer": { primary: ["G"], secondary: ["A", "S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
-    "Bodyguard": { primary: ["G", "S"], secondary: ["A"] },
-    "Blitzer": { primary: ["A", "G"], secondary: ["P", "S"] },
-    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
-  },
-  "Khorne": {
-    "Marauder": { primary: ["G", "M"], secondary: ["A", "D", "S"] },
-    "Khorngor": { primary: ["G", "M", "S"], secondary: ["A", "D", "P"] },
-    "Bloodseeker": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
-    "Bloodspawn": { primary: ["M", "S"], secondary: ["A", "G"] },
-  },
-  "Lizardmen": {
-    "Skink": { primary: ["A"], secondary: ["G", "D", "P", "S"] },
-    "Chameleon": { primary: ["A", "P"], secondary: ["G", "D", "S"] },
-    "Saurus": { primary: ["G", "S"], secondary: ["A"] },
-    "Krox": { primary: ["S"], secondary: ["A", "G"] },
-  },
-  "Necromantic Horror": {
-    "Zombie": { primary: ["D", "G"], secondary: ["A", "S"] },
-    "Ghoul": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
-    "Wraith": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Flesh Golem": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Werewolf": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
-  },
-  "Norse": {
-    "Raider": { primary: ["G"], secondary: ["A", "P", "S"] },
-    "Berserker": { primary: ["G", "S"], secondary: ["A", "P"] },
-    "Valkyrie": { primary: ["A", "G", "P"], secondary: ["S"] },
-    "Ulfwerner": { primary: ["G", "S"], secondary: ["A"] },
-    "Yhetee": { primary: ["S"], secondary: ["A", "G"] },
-  },
-  "Nurgle": {
-    "Rotter": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
-    "Pestigor": { primary: ["G", "M", "S"], secondary: ["A", "D", "P"] },
-    "Bloater": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
-    "Rotspawn": { primary: ["S"], secondary: ["D", "G", "M"] },
-  },
-  "Ogre": {
-    "Gnoblar": { primary: ["A", "D"], secondary: ["G"] },
-    "Ogre": { primary: ["S"], secondary: ["A", "D", "G", "P"] },
-    "Punter": { primary: ["P", "S"], secondary: ["A", "D", "G"] },
-  },
-  "Old World Alliance": {
-    "Lineman": { primary: ["G"], secondary: ["A", "S"] },
-    "Halfling": { primary: ["A"], secondary: ["G", "S"] },
-    "Catcher": { primary: ["A", "G"], secondary: ["P", "S"] },
-    "Dwarf Blocker": { primary: ["D", "G"], secondary: ["S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
-    "Runner": { primary: ["G", "P"], secondary: ["A", "S"] },
-    "Human Blitzer": { primary: ["G", "S"], secondary: ["A"] },
-    "Dwarf Blitzer": { primary: ["G", "S"], secondary: ["P"] },
-    "Troll Slayer": { primary: ["G", "S"], secondary: ["A"] },
-    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
-    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Orc": {
-    "Lineman": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Goblin": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Big Un": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Shambling Undead": {
-    "Skeleton": { primary: ["G"], secondary: ["A", "D", "S"] },
-    "Zombie": { primary: ["D", "G"], secondary: ["A", "S"] },
-    "Ghoul": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
-    "Wight": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Mummy": { primary: ["S"], secondary: ["A", "G"] },
-  },
-  "Skaven": {
-    "Clanrat": { primary: ["D", "G"], secondary: ["A", "M", "S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "M", "S"] },
-    "Gutter": { primary: ["A", "D", "G"], secondary: ["M", "S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
-    "Rat Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
-  },
-  "Snotling": {
-    "Lineman": { primary: ["A", "D"], secondary: ["G"] },
-    "Hoppa": { primary: ["A", "D"], secondary: ["G"] },
-    "Runna": { primary: ["A", "D"], secondary: ["G"] },
-    "Flinga": { primary: ["A", "D", "P"], secondary: ["G"] },
-    "Pump Wagon": { primary: ["D", "S"], secondary: ["A", "G"] },
-    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-  "Tomb King": {
-    "Lineman": { primary: ["G"], secondary: ["A", "D", "S"] },
-    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
-    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
-    "Tomb Guardian": { primary: ["S"], secondary: ["A", "G"] },
-  },
-  "Underworld Denizens": {
-    "Goblin": { primary: ["A", "D", "M"], secondary: ["G", "P", "S"] },
-    "Snotling": { primary: ["A", "D", "M"], secondary: ["G"] },
-    "Clanrat": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
-    "Thrower": { primary: ["G", "M", "P"], secondary: ["A", "D", "S"] },
-    "Gutter": { primary: ["A", "D", "G", "M"], secondary: ["S"] },
-    "Blitzer": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
-    "Troll": { primary: ["M", "S"], secondary: ["A", "G", "P"] },
-    "Rat Ogre": { primary: ["M", "S"], secondary: ["A", "G"] },
-  },
-  "Vampire": {
-    "Thrall": { primary: ["G"], secondary: ["A", "S"] },
-    "Runner": { primary: ["A", "G"], secondary: ["P", "S"] },
-    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
-    "Blitzer": { primary: ["A", "G", "S"], secondary: [] },
-    "Vargheist": { primary: ["S"], secondary: ["A", "G"] },
-  },
-  "Wood Elf": {
-    "Lineman": { primary: ["A", "G"], secondary: ["S"] },
-    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
-    "Catcher": { primary: ["A", "G"], secondary: ["P", "S"] },
-    "Wardancer": { primary: ["A", "G"], secondary: ["P", "S"] },
-    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
-  },
-};
-
-// Miniature purchase links for each team
-const TEAM_MINIATURE_LINKS = {
-  "Amazon": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/fr-FR/blood-bowl-amazon-team-2022" },
-    { name: "Fireforge Games", url: "https://fireforge-games.com/fantasy-football/253-amazon-smashers.html" },
-    { name: "Greebo Games", url: "https://greebo-games.com/karimat-amazons/35452-karimat-team-bundle.html" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/product/amazon-team-16-players/" }
-  ],
-  "Black Orc": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/etb-blood-bowl-black-orc-team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Hungry Troll", url: "https://hungrytrollminiatures.com/" }
-  ],
-  "Bretonnian": [
-    { name: "Hungry Troll (SacrÃ© Graal)", url: "https://hungrytrollminiatures.com/bretonia/333-bretonians-quest-box-metal.html" }
-  ],
-  "Chaos Chosen": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Chaos-Chosen-Team-2022" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
-  ],
-  "Chaos Dwarf": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Chaos-Dwarf-Team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Hungry Troll", url: "https://hungrytrollminiatures.com/" }
-  ],
-  "Chaos Renegade": [
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Dark Elf": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Dark-Elf-Team-2023" },
-    { name: "Fireforge Games", url: "https://fireforge-games.com/" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Dwarf": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Dwarf-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Elf Union": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Elven-Union-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Gnome": [
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Goblin": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/etb-blood-bowl-goblin-team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
-  ],
-  "Halfling": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/blood-bowl-halfling-team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Human": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Human-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
-  ],
-  "Imperial Nobility": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Imperial-Nobility-Team-2021" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Khorne": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Khorne-Team-2021" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Lizardmen": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Lizardmen-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
-  ],
-  "Necromantic Horror": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Necromantic-Horror-Team-2021" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Norse": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Norse-Team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Nurgle": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Nurgle-Team-2021" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Ogre": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Ogre-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Old World Alliance": [
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ],
-  "Orc": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Orc-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
-  ],
-  "Shambling Undead": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Shambling-Undead-Team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Skaven": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Skaven-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
-  ],
-  "Snotling": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Snotling-Team-2021" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Tomb King": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Khemri-Team-2020" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Underworld Denizens": [
-    { name: "Greebo Games", url: "https://greebo-games.com/netherus-underworld/35785-netherus-underwrold-team-bundle.html" },
-    { name: "Goblin Guild", url: "https://goblinguildminiatures.com/en/green-ratz/14-green-ratz-team-underworld.html" },
-    { name: "Punga Miniatures", url: "https://pungaminiatures.com/underworld" }
-  ],
-  "Vampire": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Vampire-Team-2023" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" }
-  ],
-  "Wood Elf": [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Wood-Elf-Team-2022" },
-    { name: "Greebo Games", url: "https://greebo-games.com/" },
-    { name: "Impact Miniatures", url: "https://www.impactminiatures.com/" }
-  ]
-};
-
-// Base inducements (cost can vary by team)
-const TEAMS_WITHOUT_APOTHECARY = new Set([
-  "Nurgle",
-  "Shambling Undead",
-  "Necromantic Horror",
-  "Tomb King",
-  // Common pluralization
-  "Tomb Kings",
-]);
-
-const getInducements = (teamName) => {
-  let bribeCost = 100000;
-  if (teamName === "Goblin") {
-    bribeCost = 50000;
-  } else if (teamName === "Dwarf") {
-    bribeCost = 50000; // Dwarf teams have "Bribery and Corruption" special rule
-  }
-  const base = [
-    {name:"Bribes", cost: bribeCost},
-    {name:"Apothecary", cost:50000},
-    {name:"Coaches", cost:10000},
-    {name:"Cheerleaders", cost:10000},
-    {name:"Fans", cost:5000},
-    {name:"Kegs", cost:50000},
-    {name:"Masterchef", cost:300000}
-  ];
-
-  if (TEAMS_WITHOUT_APOTHECARY.has(teamName)) {
-    return base.filter((ind) => ind.name !== "Apothecary");
-  }
-
-  return base;
-};
-
-// Blood Bowl 2025 Edition team data: l=league, r=reroll cost, p=positions, n=name, c=cost, m=max, s=stats, k=skills
-const T = {
-  Amazon:{l:"Lustrian Superleague",r:60000,p:[{n:"Lino",c:50000,m:16,s:"6/3/3+/4+/8+",k:"Dodge"},{n:"Thrower",c:80000,m:2,s:"6/3/3+/3+/8+",k:"Dodge, On the Ball, Pass, Safe Pass"},{n:"Blitzer",c:90000,m:2,s:"7/3/3+/4+/8+",k:"Dodge, Hit and Run, Jump Up"},{n:"Blocker",c:110000,m:2,s:"6/4/3+/4+/9+",k:"Defensive, Dodge"}]},
-  "Black Orc":{l:"Badlands Brawl",r:60000,p:[{n:"Goblin",c:45000,m:16,s:"6/2/3+/4+/8+",k:"Dodge, Right Stuff, Stunty, Thick Skull"},{n:"Black Orc",c:90000,m:6,s:"4/4/4+/5+/10+",k:"Brawler, Grab"},{n:"Troll",c:115000,m:1,s:"4/5/5+/5+/10+",k:"Always Hungry, Mighty Blow, Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"}]},
-  Bretonnian:{l:"Old World Classic",r:60000,p:[{n:"Squire",c:50000,m:16,s:"6/3/3+/4+/8+",k:"Wrestle"},{n:"Catcher",c:85000,m:2,s:"7/3/3+/4+/9+",k:"Catch, Dauntless, Nerves of Steel"},{n:"Thrower",c:80000,m:2,s:"6/3/3+/3+/9+",k:"Dauntless, Nerves of Steel, Pass"},{n:"Grail Knight",c:95000,m:2,s:"7/3/3+/4+/10+",k:"Block, Dauntless, Steady Footing"}]},
-  "Chaos Chosen":{l:"Chaos Clash",r:50000,p:[{n:"Beastman",c:55000,m:16,s:"6/3/3+/3+/9+",k:"Horns, Thick Skull"},{n:"Chosen",c:100000,m:4,s:"5/4/3+/5+/10+",k:"Arm Bar"},{n:"Troll",c:115000,m:1,s:"4/5/5+/5+/10+",k:"Always Hungry, Loner (4+), Mighty Blow, Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"},{n:"Ogre",c:140000,m:1,s:"5/5/4+/5+/10+",k:"Bone Head, Loner (4+), Mighty Blow, Thick Skull, Throw Team-mate"},{n:"Minotaur",c:150000,m:1,s:"5/5/4+/6+/9+",k:"Frenzy, Horns, Loner (4+), Mighty Blow, Thick Skull, Unchannelled Fury"}]},
-  "Chaos Dwarf":{l:"Badlands Brawl or Chaos Clash",r:70000,p:[{n:"Hobgoblin",c:40000,m:16,s:"6/3/3+/4+/8+",k:"-"},{n:"Stabba",c:60000,m:2,s:"6/3/3+/5+/8+",k:"Shadowing, Stab"},{n:"Blocker",c:70000,m:4,s:"4/3/4+/6+/10+",k:"Block, Iron Hard Skin, Thick Skull"},{n:"Flamer",c:80000,m:2,s:"5/3/4+/6+/10+",k:"Brawler, Breathe Fire, Disturbing Presence, Thick Skull"},{n:"Bull Centaur",c:130000,m:2,s:"6/4/4+/6+/10+",k:"Sprint, Sure Feet, Thick Skull, Unsteady"},{n:"Minotaur",c:150000,m:1,s:"5/5/4+/6+/9+",k:"Frenzy, Horns, Loner (4+), Mighty Blow, Thick Skull, Unchannelled Fury"}]},
-  "Chaos Renegade":{l:"Chaos Clash",r:70000,p:[{n:"Lineman",c:50000,m:16,s:"6/3/3+/4+/9+",k:"Animosity (all)"},{n:"Goblin",c:40000,m:1,s:"3/2/3+/4+/8+",k:"Animosity (all), Dodge, Right Stuff, Stunty"},{n:"Orc",c:50000,m:1,s:"5/3/3+/4+/10+",k:"Animosity (all)"},{n:"Skaven",c:50000,m:1,s:"7/3/3+/4+/8+",k:"Animosity (all)"},{n:"DarkElf",c:65000,m:1,s:"6/3/2+/3+/9+",k:"Animosity (all)"},{n:"Thrower",c:75000,m:1,s:"6/3/3+/3+/9+",k:"Animosity (all), Pass, Sure Hands"},{n:"Troll",c:115000,m:1,s:"4/5/5+/5+/10+",k:"Always Hungry, Loner (4+), Mighty Blow, Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"},{n:"Ogre",c:140000,m:1,s:"5/5/4+/5+/10+",k:"Bone Head, Loner (4+), Thick Skull, Throw Team-mate"},{n:"Minotaur",c:150000,m:1,s:"5/5/4+/6+/9+",k:"Frenzy, Horns, Loner (4+), Mighty Blow, Thick Skull, Unchannelled Fury"},{n:"RatOgre",c:150000,m:1,s:"6/5/4+/6+/9+",k:"Animal Savagery, Frenzy, Loner (4+), Mighty Blow, Prehensile Tail"}]},
-  "Dark Elf":{l:"Elven Kingdoms League",r:50000,p:[{n:"Lineman",c:65000,m:16,s:"6/3/2+/3+/9+",k:"-"},{n:"Runner",c:80000,m:2,s:"7/3/2+/3+/8+",k:"Dump-Off, Punt"},{n:"Assassin",c:90000,m:2,s:"7/3/2+/4+/8+",k:"Hit and Run, Shadowing, Stab"},{n:"Blitzer",c:105000,m:2,s:"7/3/2+/3+/9+",k:"Block"},{n:"Witch Elf",c:110000,m:2,s:"7/3/2+/4+/8+",k:"Dodge, Frenzy, Jump Up"}]},
-  Dwarf:{l:"Worlds Edge Superleague",r:60000,p:[{n:"Lineman",c:70000,m:16,s:"4/3/4+/5+/10+",k:"Block, Defensive, Thick Skull"},{n:"Runner",c:80000,m:2,s:"6/3/3+/4+/9+",k:"Sprint, Sure Hands, Thick Skull"},{n:"Blitzer",c:100000,m:2,s:"5/3/4+/4+/10+",k:"Block, Diving Tackle, Tackle, Thick Skull"},{n:"Troll Slayer",c:95000,m:2,s:"5/3/4+/5+/9+",k:"Block, Dauntless, Frenzy, Hatred (Troll), Thick Skull"},{n:"Deathroller",c:170000,m:1,s:"5/7/5+/-/11+",k:"Break Tackle, Dirty Player, Juggernaut, Loner (4+), Mighty Blow, No Ball, Secret Weapon, Stand Firm"}]},
-  "Elf Union":{l:"Elven Kingdoms League",r:50000,p:[{n:"Lineman",c:65000,m:16,s:"6/3/2+/3+/8+",k:"Fumblerooski"},{n:"Thrower",c:75000,m:2,s:"6/3/2+/2+/8+",k:"Hail Mary Pass, Pass"},{n:"Catcher",c:100000,m:2,s:"8/3/2+/4+/8+",k:"Catch, Diving Catch, Nerves of Steel"},{n:"Blitzer",c:115000,m:2,s:"7/3/2+/3+/9+",k:"Block, Sidestep"}]},
-  Gnome:{l:"Halfling Thimble Cup or Woodland League",r:50000,p:[{n:"Lineman",c:40000,m:16,s:"5/2/3+/4+/7+",k:"Jump Up, Right Stuff, Stunty, Wrestle"},{n:"Fox",c:50000,m:2,s:"7/2/2+/-/6+",k:"Dodge, My Ball, Sidestep, Stunty"},{n:"Illusionist",c:50000,m:2,s:"5/2/3+/3+/7+",k:"Jump Up, Stunty, Trickster, Wrestle"},{n:"Beastmaster",c:55000,m:2,s:"5/2/3+/4+/8+",k:"Guard, Jump Up, Stunty, Wrestle"},{n:"Treeman",c:120000,m:2,s:"2/6/5+/5+/11+",k:"Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-mate, Timmm-ber!"}]},
-  Goblin:{l:"Badlands Brawl or Underworld Challenge",r:60000,p:[{n:"Lineman",c:40000,m:16,s:"6/2/3+/4+/8+",k:"Dodge, Right Stuff, Stunty"},{n:"Loony",c:40000,m:1,s:"6/2/3+/-/8+",k:"Chainsaw, No Ball, Secret Weapon, Stunty"},{n:"Bomma",c:45000,m:1,s:"6/2/3+/4+/8+",k:"Bombardier, Dodge, Secret Weapon, Stunty"},{n:"Ooligan",c:60000,m:1,s:"6/2/3+/5+/8+",k:"Dirty Player, Disturbing Presence, Dodge, Right Stuff, Stunty, Taunt"},{n:"Doom Diver",c:65000,m:1,s:"6/2/3+/6+/8+",k:"Dodge, Right Stuff, Stunty, Swoop"},{n:"Fanatic",c:70000,m:1,s:"3/7/3+/-/8+",k:"Ball & Chain, No Ball, Secret Weapon, Stunty"},{n:"Pogoer",c:75000,m:1,s:"7/2/3+/4+/8+",k:"Dodge, Pogo Stick, Stunty"},{n:"Troll",c:115000,m:2,s:"4/5/5+/5+/10+",k:"Always Hungry, Mighty Blow (+1), Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"}]},
-  Halfling:{l:"Halfling Thimble Cup or Woodland League",r:60000,p:[{n:"Lineman",c:30000,m:16,s:"5/2/3+/4+/7+",k:"Dodge, Right Stuff, Stunty"},{n:"Hefty",c:50000,m:2,s:"5/2/3+/3+/8+",k:"Dodge, Fend, Stunty"},{n:"Catcher",c:55000,m:2,s:"5/2/3+/5+/7+",k:"Catch, Dodge, Right Stuff, Sprint, Stunty"},{n:"Treeman",c:120000,m:2,s:"2/6/5+/5+/11+",k:"Mighty Blow (+1), Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-mate, Timmm-ber!"}]},
-  Human:{l:"Old World Classic",r:50000,p:[{n:"Lineman",c:50000,m:16,s:"6/3/3+/4+/9+",k:"-"},{n:"Halfling",c:30000,m:3,s:"5/2/3+/4+/7+",k:"Dodge, Right Stuff, Stunty"},{n:"Catcher",c:75000,m:2,s:"8/3/3+/4+/8+",k:"Catch, Dodge"},{n:"Thrower",c:75000,m:2,s:"6/3/3+/3+/9+",k:"Pass, Sure Hands"},{n:"Blitzer",c:85000,m:2,s:"7/3/3+/4+/9+",k:"Block, Tackle"},{n:"Ogre",c:140000,m:1,s:"5/5/4+/5+/10+",k:"Bone Head, Loner (3+), Mighty Blow, Thick Skull, Throw Team-mate"}]},
-  "Imperial Nobility":{l:"Old World Classic",r:60000,p:[{n:"Retainer",c:45000,m:16,s:"6/3/3+/4+/8+",k:"Fend"},{n:"Thrower",c:75000,m:2,s:"6/3/3+/2+/9+",k:"Give and Go, Pass, Pro"},{n:"Bodyguard",c:85000,m:4,s:"5/3/3+/4+/9+",k:"Stand Firm, Wrestle"},{n:"Blitzer",c:90000,m:2,s:"7/3/3+/4+/9+",k:"Block, Catch, Pro"},{n:"Ogre",c:140000,m:1,s:"5/5/4+/5+/10+",k:"Bone Head, Loner (3+), Mighty Blow, Thick Skull, Throw Team-mate"}]},
-  Khorne:{l:"Chaos Clash",r:60000,p:[{n:"Marauder",c:50000,m:16,s:"6/3/3+/4+/8+",k:"Frenzy"},{n:"Khorngor",c:70000,m:2,s:"6/3/3+/4+/9+",k:"Horns, Juggernaut, Jump Up, Thick Skull"},{n:"Bloodseeker",c:105000,m:4,s:"5/4/4+/6+/10+",k:"Frenzy"},{n:"Bloodspawn",c:160000,m:1,s:"5/5/4+/6+/9+",k:"Claws, Frenzy, Loner (4+), Mighty Blow, Unchannelled Fury"}]},
-  Lizardmen:{l:"Lustrian Superleague",r:70000,p:[{n:"Skink",c:60000,m:16,s:"8/2/3+/4+/8+",k:"Dodge, Stunty"},{n:"Chameleon",c:70000,m:2,s:"7/2/3+/3+/8+",k:"Dodge, On The Ball, Shadowing, Stunty"},{n:"Saurus",c:90000,m:6,s:"6/4/5+/6+/10+",k:"Juggernaut, Unsteady"},{n:"Krox",c:140000,m:1,s:"6/5/5+/6+/10+",k:"Bone Head, Loner (4+), Mighty Blow, Prehensile Tail, Thick Skull"}]},
-  "Necromantic Horror":{l:"Sylvannian Spotlight",r:70000,p:[{n:"Zombie",c:40000,m:16,s:"4/3/4+/6+/9+",k:"Eye Gouge, Regeneration, Unsteady"},{n:"Ghoul",c:75000,m:2,s:"7/3/3+/3+/8+",k:"Dodge, Regeneration"},{n:"Wraith",c:85000,m:2,s:"6/3/3+/-/9+",k:"Block, Foul Appearance, No Hands, Regeneration, Sidestep"},{n:"Flesh Golem",c:110000,m:2,s:"4/4/4+/6+/10+",k:"Regeneration, Stand Firm, Thick Skull, Unsteady"},{n:"Werewolf",c:120000,m:2,s:"8/3/3+/3+/9+",k:"Claws, Frenzy, Regeneration"}]},
-  Norse:{l:"Chaos Clash or Old World Classic",r:60000,p:[{n:"Raider",c:50000,m:16,s:"6/3/3+/4+/8+",k:"Block, Drunkard, Thick Skull, Unsteady"},{n:"Boar",c:20000,m:2,s:"5/1/3+/-/6+",k:"Dodge, No Ball, Pick-me-up, Stunty, Titchy"},{n:"Berserker",c:90000,m:2,s:"6/3/3+/5+/8+",k:"Block, Frenzy, Jump Up"},{n:"Valkyrie",c:95000,m:2,s:"7/3/3+/3+/8+",k:"Catch, Dauntless, Pass, Strip Ball"},{n:"Ulfwerner",c:105000,m:2,s:"6/4/4+/6+/9+",k:"Frenzy, Unsteady"},{n:"Yhetee",c:140000,m:1,s:"5/5/4+/6+/9+",k:"Claws, Disturbing Presence, Frenzy, Loner (4+), Unchannelled Fury"}]},
-  Nurgle:{l:"Chaos Clash",r:60000,p:[{n:"Rotter",c:40000,m:16,s:"5/3/4+/6+/9+",k:"Decay, Plague Ridden"},{n:"Pestigor",c:70000,m:2,s:"6/3/3+/4+/9+",k:"Horns, Plague Ridden, Regeneration, Steady Footing, Thick Skull"},{n:"Bloater",c:110000,m:4,s:"4/4/4+/6+/10+",k:"Disturbing Presence, Foul Appearance, Plague Ridden, Regeneration, Stand Firm, Unsteady"},{n:"Rotspawn",c:140000,m:1,s:"4/5/5+/6+/10+",k:"Disturbing Presence, Foul Appearance, Loner (4+), Mighty Blow, Pick-me-up, Plague Ridden, Really Stupid, Regeneration, Tentacles"}]},
-  Ogre:{l:"Badlands Brawl or Worlds Edge Superleague",r:70000,p:[{n:"Gnoblar",c:15000,m:16,s:"5/1/3+/4+/6+",k:"Dodge, Right Stuff, Sidestep, Stunty, Titchy"},{n:"Ogre",c:140000,m:5,s:"5/5/4+/5+/10+",k:"Bone Head, Mighty Blow, Thick Skull, Throw Team-mate"},{n:"Punter",c:145000,m:1,s:"5/5/4+/4+/10+",k:"Bone Head, Kick Team-mate, Mighty Blow, Thick Skull"}]},
-  "Old World Alliance":{l:"Old World Classic",r:70000,p:[{n:"Lineman",c:50000,m:16,s:"6/3/3+/4+/9+",k:"-"},{n:"Halfling",c:30000,m:5,s:"5/2/3+/4+/7+",k:"Dodge, Right Stuff, Stunty"},{n:"Catcher",c:75000,m:1,s:"8/3/3+/4+/8+",k:"Catch, Dodge"},{n:"Dwarf Blocker",c:70000,m:3,s:"4/3/4+/5+/10+",k:"Block, Defensive, Thick Skull"},{n:"Thrower",c:75000,m:1,s:"6/3/3+/3+/9+",k:"Pass, Sure Hands"},{n:"Runner",c:80000,m:1,s:"6/3/3+/4+/9+",k:"Sprint, Sure Hands, Thick Skull"},{n:"Human Blitzer",c:85000,m:1,s:"7/3/3+/4+/9+",k:"Block, Tackle"},{n:"Dwarf Blitzer",c:100000,m:1,s:"5/3/4+/4+/10+",k:"Block, Diving Tackle, Tackle, Thick Skull"},{n:"Troll Slayer",c:95000,m:1,s:"5/3/4+/5+/9+",k:"Block, Dauntless, Frenzy, Hatred (Troll), Thick Skull"},{n:"Ogre",c:140000,m:1,s:"5/5/4+/5+/10+",k:"Bone Head, Loner (3+), Mighty Blow, Thick Skull, Throw Team-mate"},{n:"Treeman",c:120000,m:1,s:"2/6/5+/5+/11+",k:"Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-mate, Timmm-ber!"}]},
-  Orc:{l:"Badlands Brawl",r:60000,p:[{n:"Lineman",c:50000,m:16,s:"5/3/3+/4+/10+",k:"-"},{n:"Goblin",c:40000,m:4,s:"6/2/3+/3+/8+",k:"Dodge, Right Stuff, Stunty"},{n:"Thrower",c:75000,m:2,s:"6/3/3+/3+/9+",k:"Pass, Sure Hands"},{n:"Blitzer",c:85000,m:2,s:"6/3/3+/4+/10+",k:"Block, Break Tackle"},{n:"Big Un",c:95000,m:2,s:"5/4/4+/6+/10+",k:"Mighty Blow, Taunt, Thick Skull, Unsteady"},{n:"Troll",c:115000,m:1,s:"4/5/5+/5+/10+",k:"Always Hungry, Loner (4+), Mighty Blow, Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"}]},
-  "Shambling Undead":{l:"Sylvanian Spotlight",r:70000,p:[{n:"Skeleton",c:40000,m:16,s:"5/3/4+/6+/8+",k:"Regeneration, Thick Skull"},{n:"Zombie",c:40000,m:16,s:"4/3/4+/6+/9+",k:"Eye Gouge, Regeneration, Unsteady"},{n:"Ghoul",c:75000,m:2,s:"7/3/3+/3+/8+",k:"Dodge, Regeneration"},{n:"Wight",c:95000,m:2,s:"6/3/3+/5+/9+",k:"Block, Regeneration, Tackle, Thick Skull"},{n:"Mummy",c:125000,m:2,s:"3/5/5+/6+/10+",k:"Mighty Blow, Regeneration"}]},
-  Skaven:{l:"Underworld Challenge",r:50000,p:[{n:"Clanrat",c:50000,m:16,s:"7/3/3+/4+/8+",k:"-"},{n:"Thrower",c:80000,m:2,s:"7/3/3+/2+/8+",k:"Pass, Sure Hands"},{n:"Gutter",c:85000,m:2,s:"9/2/2+/4+/8+",k:"Dodge, Stab"},{n:"Blitzer",c:90000,m:2,s:"8/3/3+/4+/9+",k:"Block, Strip Ball"},{n:"Rat Ogre",c:150000,m:1,s:"6/5/4+/6+/9+",k:"Animal Savagery, Frenzy, Loner (4+), Mighty Blow, Prehensile Tail"}]},
-  Snotling:{l:"Underworld Challenge",r:70000,p:[{n:"Lineman",c:15000,m:16,s:"5/1/3+/4+/6+",k:"Dodge, Insignificant, Right Stuff, Sidestep, Stunty, Titchy"},{n:"Hoppa",c:20000,m:2,s:"6/1/3+/4+/6+",k:"Dodge, Pogo, Right Stuff, Sidestep, Stunty"},{n:"Runna",c:20000,m:2,s:"6/1/3+/4+/6+",k:"Dodge, Right Stuff, Sidestep, Sprint, Stunty"},{n:"Flinga",c:30000,m:2,s:"5/1/3+/4+/6+",k:"Bombardier, Dodge, Right Stuff, Secret Weapon, Sidestep, Stunty, Titchy"},{n:"Pump Wagon",c:100000,m:2,s:"5/5/5+/6+/9+",k:"Dirty Player, Juggernaut, Mighty Blow, Really Stupid, Stand Firm"},{n:"Troll",c:115000,m:2,s:"4/5/5+/5+/10+",k:"Always Hungry, Mighty Blow, Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"}]},
-  "Tomb King":{l:"Sylvannian Spotlight",r:60000,p:[{n:"Lineman",c:40000,m:16,s:"5/3/4+/6+/8+",k:"Regeneration, Thick Skull"},{n:"Thrower",c:65000,m:2,s:"6/3/4+/3+/9+",k:"Pass, Regeneration, Sure Hands, Thick Skull"},{n:"Blitzer",c:85000,m:2,s:"6/3/4+/5+/9+",k:"Block, Regeneration, Thick Skull"},{n:"Tomb Guardian",c:115000,m:4,s:"4/5/5+/6+/10+",k:"Brawler, Decay, Regeneration"}]},
-  "Underworld Denizens":{l:"Underworld Challenge",r:70000,p:[{n:"Goblin",c:40000,m:16,s:"6/2/3+/4+/8+",k:"Dodge, Right Stuff, Stunty"},{n:"Snotling",c:15000,m:6,s:"5/1/3+/4+/6+",k:"Dodge, Insignificant, Right Stuff, Sidestep, Stunty, Titchy"},{n:"Clanrat",c:50000,m:3,s:"7/3/3+/4+/8+",k:"Animosity (Goblin)"},{n:"Thrower",c:80000,m:1,s:"7/3/3+/2+/8+",k:"Animosity (Goblin), Pass, Sure Hands"},{n:"Gutter",c:85000,m:1,s:"9/2/2+/4+/8+",k:"Animosity (Goblin), Dodge, Stab"},{n:"Blitzer",c:90000,m:1,s:"8/3/3+/4+/9+",k:"Animosity (Goblin), Block, Strip Ball"},{n:"Troll",c:115000,m:1,s:"4/5/5+/5+/10+",k:"Always Hungry, Loner (4+), Mighty Blow, Projectile Vomit, Really Stupid, Regeneration, Throw Team-mate"},{n:"Rat Ogre",c:150000,m:1,s:"6/5/4+/6+/9+",k:"Animal Savagery, Frenzy, Loner (4+), Mighty Blow, Prehensile Tail"}]},
-  Vampire:{l:"Sylvannian Spotlight",r:60000,p:[{n:"Thrall",c:40000,m:16,s:"6/3/3+/4+/8+",k:"-"},{n:"Runner",c:100000,m:2,s:"8/3/2+/3+/8+",k:"Bloodlust (2+), Hypnotic Gaze, Regeneration"},{n:"Thrower",c:110000,m:2,s:"6/4/2+/2+/9+",k:"Bloodlust (2+), Hypnotic Gaze, Pass, Regeneration"},{n:"Blitzer",c:110000,m:2,s:"6/4/2+/4+/9+",k:"Bloodlust (3+), Hypnotic Gaze, Juggernaut, Regeneration"},{n:"Vargheist",c:150000,m:1,s:"5/5/4+/6+/10+",k:"Bloodlust (3+), Claws, Frenzy, Loner (4+), Regeneration"}]},
-  "Wood Elf":{l:"Elven Kingdoms League or Woodland League",r:50000,p:[{n:"Lineman",c:65000,m:16,s:"7/3/2+/3+/8+",k:"-"},{n:"Thrower",c:85000,m:2,s:"7/3/2+/2+/8+",k:"Pass, Safe Pair of Hands"},{n:"Catcher",c:90000,m:2,s:"8/2/2+/3+/8+",k:"Catch, Dodge, Sprint"},{n:"Wardancer",c:130000,m:2,s:"8/3/2+/3+/8+",k:"Block, Dodge, Leap"},{n:"Treeman",c:120000,m:1,s:"2/6/5+/5+/11+",k:"Loner (4+), Mighty Blow, Stand Firm, Strong Arm, Take Root, Thick Skull, Throw Team-mate"}]}
-};
+/* Previous structure had ~1500 lines of hardcoded data here including:
+   - SKILLS_BY_CATEGORY
+   - POSITION_SKILL_ACCESS
+   - TEAM_MINIATURE_LINKS
+   - getInducements()
+   - T (team data object)
+   
+   All now properly organized in separate, easy-to-maintain files!
+*/
 
 export default function BloodBowlRoster() {
   const [selectedTeam, setSelectedTeam] = useState("Human");
@@ -553,14 +139,14 @@ const TEAM_BACKGROUNDS = {
   "Wood Elf": `${BASE_URL}images/Woodelf.png`
 };
 
-  const teamData = T[selectedTeam];
+  const teamData = TEAMS[selectedTeam];
   const INDUCEMENTS = getInducements(selectedTeam);
 
   const totalSpent = useMemo(() => {
     let cost = 0;
-    purchasedPlayers.forEach(p => cost += p.c);
+    purchasedPlayers.forEach(p => cost += p.cost);
     const rerollCount = inducements["Rerolls"] || 0;
-    cost += rerollCount * teamData.r;
+    cost += rerollCount * teamData.rerollCost;
     INDUCEMENTS.forEach(ind => {
       const count = inducements[ind.name] || 0;
       // First dedicated fan is free, so subtract 1 from count before calculating cost
@@ -589,11 +175,11 @@ const TEAM_BACKGROUNDS = {
   const calcTotalSpentFrom = (players, indState) => {
     let cost = 0;
     players.forEach((p) => {
-      cost += p.c;
+      cost += p.cost;
     });
 
     const rerollCount = indState["Rerolls"] || 0;
-    cost += rerollCount * teamData.r;
+    cost += rerollCount * teamData.rerollCost;
 
     INDUCEMENTS.forEach((ind) => {
       const count = indState[ind.name] || 0;
@@ -612,10 +198,10 @@ const TEAM_BACKGROUNDS = {
 
       const spentNow = calcTotalSpentFrom(prevPlayers, inducements);
       const remainingNow = startingTreasury - spentNow;
-      if (remainingNow < position.c) return prevPlayers;
+      if (remainingNow < position.cost) return prevPlayers;
 
-      const currentCount = prevPlayers.filter((p) => p.n === position.n).length;
-      if (currentCount >= position.m) return prevPlayers;
+      const currentCount = prevPlayers.filter((p) => p.name === position.name).length;
+      if (currentCount >= position.max) return prevPlayers;
 
       const newPlayer = { ...position, id: Date.now() + Math.random() };
       return [...prevPlayers, newPlayer];
@@ -645,7 +231,7 @@ const TEAM_BACKGROUNDS = {
       if (newValue > current) {
         const unitCost =
           indName === "Rerolls"
-            ? teamData.r
+            ? teamData.rerollCost
             : (INDUCEMENTS.find((ind) => ind.name === indName)?.cost ?? 0);
         
         // Calculate actual chargeable count difference (accounting for free first fan)
@@ -781,7 +367,7 @@ const TEAM_BACKGROUNDS = {
 
   const formatCost = (cost) => cost.toLocaleString() + " gp";
 
-  const getPositionCount = (posName) => purchasedPlayers.filter(p => p.n === posName).length;
+  const getPositionCount = (posName) => purchasedPlayers.filter(p => p.name === posName).length;
 
   const getInducementsList = () => {
     const list = [];
@@ -903,7 +489,7 @@ const TEAM_BACKGROUNDS = {
             <div className="flex justify-between items-center mb-3 pb-2 border-b border-blue-800">
               <div>
                 <h1 className="text-3xl font-bold text-red-600">{selectedTeam}</h1>
-                <p className="text-sm text-blue-900">{teamData.l}</p>
+                <p className="text-sm text-blue-900">{teamData.league}</p>
               </div>
               <div className="flex gap-3">
                 <div className="bg-purple-700 rounded px-3 py-1 border border-yellow-400 text-center">
@@ -956,7 +542,7 @@ const TEAM_BACKGROUNDS = {
                   </thead>
                   <tbody>
                     {purchasedPlayers.map((player, idx) => {
-                      const stats = player.s.split('/');
+                      const stats = player.stats.split('/');
                       const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
                       const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
                       
@@ -975,13 +561,13 @@ const TEAM_BACKGROUNDS = {
                           style={{ userSelect: 'none' }}
                         >
                           <td className="p-1.5 text-blue-900 font-bold border border-blue-200 text-sm">{idx + 1}</td>
-                          <td className="p-1.5 text-blue-900 font-semibold border border-blue-200">{player.n}</td>
+                          <td className="p-1.5 text-blue-900 font-semibold border border-blue-200">{player.name}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[0]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[1]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[2]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[3]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[4]}</td>
-                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">{player.k || '-'}</td>
+                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">{player.skills || '-'}</td>
                           <td className="p-1.5 text-gray-700 text-xs border border-blue-200">
                             {allAddedSkills.length > 0 ? (
                               <div className="flex flex-wrap gap-1">
@@ -1010,7 +596,7 @@ const TEAM_BACKGROUNDS = {
                             </button>
                           </td>
                           <td className="p-1.5 text-right text-blue-900 font-bold border border-blue-200 text-sm">
-                            {formatCost(player.c + (addedSkills.primary.length * 20000) + (addedSkills.secondary.length * 40000))}
+                            {formatCost(player.cost + (addedSkills.primary.length * 20000) + (addedSkills.secondary.length * 40000))}
                           </td>
                         </tr>
                       );
@@ -1046,14 +632,14 @@ const TEAM_BACKGROUNDS = {
           const player = purchasedPlayers.find(p => p.id === selectedPlayerId);
           if (!player) return null;
           
-          const positionSkills = POSITION_SKILL_ACCESS[selectedTeam]?.[player.n];
+          const positionSkills = getPositionSkillAccess(selectedTeam, player.name);
           if (!positionSkills) {
             return (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeSkillModal}>
                 <div className="bg-white rounded-lg p-6 max-w-md" onClick={(e) => e.stopPropagation()}>
                   <h2 className="text-xl font-bold text-red-600 mb-4">Skill Access Not Available</h2>
                   <p className="text-gray-700 mb-4">
-                    Skill access data for {selectedTeam} - {player.n} is not yet configured.
+                    Skill access data for {selectedTeam} - {player.name} is not yet configured.
                   </p>
                   <button
                     onClick={closeSkillModal}
@@ -1067,14 +653,14 @@ const TEAM_BACKGROUNDS = {
           }
           
           const addedSkills = playerSkills[selectedPlayerId] || { primary: [], secondary: [] };
-          const basicSkills = player.k ? player.k.split(',').map(s => s.trim()) : [];
+          const basicSkills = player.skills ? player.skills.split(',').map(s => s.trim()) : [];
           
           return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={closeSkillModal}>
               <div className="bg-blue-50 rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-2xl font-bold text-blue-800">
-                    Add Skills to {player.n}
+                    Add Skills to {player.name}
                   </h2>
                   <button
                     onClick={closeSkillModal}
@@ -1385,7 +971,7 @@ const TEAM_BACKGROUNDS = {
           <div className="border border-gray-800 p-6">
             <div className="text-center mb-6">
               <h1 className="text-4xl font-bold mb-2">{selectedTeam}</h1>
-              <p className="text-xl text-gray-600">{teamData.l} League</p>
+              <p className="text-xl text-gray-600">{teamData.league} League</p>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-6 text-center">
@@ -1423,18 +1009,18 @@ const TEAM_BACKGROUNDS = {
                     return (
                     <tr key={player.id} className="border-b border-gray-400">
                       <td className="p-2">{idx + 1}</td>
-                      <td className="p-2 font-semibold">{player.n}</td>
-                      <td className="p-2 font-mono text-sm">{player.s}</td>
+                      <td className="p-2 font-semibold">{player.name}</td>
+                      <td className="p-2 font-mono text-sm">{player.stats}</td>
                       <td className="p-2 text-sm">
-                        {player.k || '-'}
+                        {player.skills || '-'}
                         {allAddedSkills.length > 0 && (
                           <span className="font-bold">
-                            {player.k ? ', ' : ''}
+                            {player.skills ? ', ' : ''}
                             {allAddedSkills.join(', ')}
                           </span>
                         )}
                       </td>
-                      <td className="p-2 text-right">{formatCost(player.c)}</td>
+                      <td className="p-2 text-right">{formatCost(player.cost)}</td>
                     </tr>
                     );
                   })}
@@ -1622,7 +1208,7 @@ const TEAM_BACKGROUNDS = {
                   backgroundSize: '24px 24px'
                 }}
               >
-                {Object.keys(T).sort().map(team => (
+                {TEAM_NAMES.map(team => (
                   <option key={team} value={team}>{team}</option>
                 ))}
               </select>
@@ -1671,7 +1257,7 @@ const TEAM_BACKGROUNDS = {
           </div>
           
           <div className="text-blue-900 text-sm font-semibold">
-            {teamData.l} • Reroll Cost: {formatCost(teamData.r)}
+            {teamData.league} • Reroll Cost: {formatCost(teamData.rerollCost)}
           </div>
         </div>
 
@@ -1684,28 +1270,28 @@ const TEAM_BACKGROUNDS = {
               <h2 className="text-2xl font-bold text-blue-800 mb-2">AVAILABLE POSITIONS</h2>
               <div className="text-sm text-blue-900 font-semibold mb-2 pb-1 border-b border-blue-800">{selectedTeam} team</div>
               <div className="space-y-2 max-h-[calc(100vh-180px)] overflow-y-auto pr-2 custom-scroll">
-                {teamData.p.map((pos, idx) => {
-                  const count = getPositionCount(pos.n);
-                  const canBuy = remaining >= pos.c && count < pos.m && purchasedPlayers.length < MAX_PLAYERS;
+                {teamData.positions.map((pos, idx) => {
+                  const count = getPositionCount(pos.name);
+                  const canBuy = remaining >= pos.cost && count < pos.max && purchasedPlayers.length < MAX_PLAYERS;
                   return (
                     <div key={idx} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-800 transition-colors">
                       <div className="flex justify-between items-start gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-bold text-blue-900 truncate">{pos.n}</h3>
+                            <h3 className="text-lg font-bold text-blue-900 truncate">{pos.name}</h3>
                             <span className="text-gray-600 text-xs whitespace-nowrap">
-                              ({count}/{pos.m})
+                              ({count}/{pos.max})
                             </span>
                           </div>
                           <div className="text-gray-700 font-mono text-xs mt-0.5">
-                            {pos.s}
+                            {pos.stats}
                           </div>
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {pos.k || '-'}
+                            {pos.skills || '-'}
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(pos.c)}</div>
+                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(pos.cost)}</div>
                           <button
                             onClick={() => purchasePlayer(pos)}
                             disabled={!canBuy}
@@ -1765,13 +1351,13 @@ const TEAM_BACKGROUNDS = {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-gray-600 text-sm font-bold">#{idx + 1}</span>
-                            <h3 className="text-lg font-bold text-blue-900 truncate">{player.n}</h3>
+                            <h3 className="text-lg font-bold text-blue-900 truncate">{player.name}</h3>
                           </div>
                           <div className="text-gray-700 font-mono text-xs mt-0.5">
-                            {player.s}
+                            {player.stats}
                           </div>
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {player.k || '-'}
+                            {player.skills || '-'}
                           </div>
                           {hasAddedSkills && (
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -1789,7 +1375,7 @@ const TEAM_BACKGROUNDS = {
                           )}
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.c)}</div>
+                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.cost)}</div>
                           <button
                             onClick={() => removePlayer(player.id)}
                             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"
@@ -1820,7 +1406,7 @@ const TEAM_BACKGROUNDS = {
                       <h3 className="text-lg font-bold text-blue-900 truncate">Rerolls</h3>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <div className="text-blue-800 font-bold text-sm">{formatCost(teamData.r)}</div>
+                      <div className="text-blue-800 font-bold text-sm">{formatCost(teamData.rerollCost)}</div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
@@ -1836,9 +1422,9 @@ const TEAM_BACKGROUNDS = {
                       )}
                       <button
                         onClick={() => updateInducement("Rerolls", 1)}
-                        disabled={remaining < teamData.r}
+                        disabled={remaining < teamData.rerollCost}
                         className={`px-3 py-1 rounded font-bold text-sm transition-all border ${
-                          remaining >= teamData.r
+                          remaining >= teamData.rerollCost
                             ? 'bg-blue-700 hover:bg-blue-600 text-white cursor-pointer border-blue-900'
                             : 'bg-gray-400 text-gray-600 cursor-not-allowed border-gray-500'
                         }`}
@@ -1892,13 +1478,13 @@ const TEAM_BACKGROUNDS = {
         </div>
 
         {/* Miniature Purchase Links */}
-        {TEAM_MINIATURE_LINKS[selectedTeam] && (
+        {teamData.miniatureLinks && (
           <div className="mt-3 bg-blue-50 rounded-lg p-3 shadow-xl border border-blue-800">
             <h2 className="text-xl font-bold text-blue-800 mb-2 pb-1 border-b border-blue-800">
               WHERE TO BUY MINIATURES FOR {selectedTeam.toUpperCase()} TEAMS
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {TEAM_MINIATURE_LINKS[selectedTeam].map((link, idx) => (
+              {teamData.miniatureLinks.map((link, idx) => (
                 <a
                   key={idx}
                   href={link.url}
