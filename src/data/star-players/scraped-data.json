@@ -3,7 +3,7 @@
     "slug": "Akhorne_The_Squirrel",
     "name": "Akhorne The Squirrel",
     "cost": 80000,
-    "stats": "/7/1/2+/-",
+    "stats": "7/1/2+/-/6+",
     "skills": "Claws, Dauntless, Dodge, Frenzy, Jump Up, Loner (4+), No Ball, Sidestep, Stunty, Titchy",
     "playsFor": [
       "Any team"
@@ -49,7 +49,7 @@
     "slug": "Anqi_Panqi",
     "name": "Anqi Panqi",
     "cost": 190000,
-    "stats": "/7/4/5+/6+",
+    "stats": "7/4/5+/6+/10+",
     "skills": "Block, Grab, Loner (4+), Stand Firm, Unsteady",
     "playsFor": [
       "Lustrian Superleague"
@@ -67,7 +67,7 @@
     "slug": "Barik_Farblast",
     "name": "Barik Farblast",
     "cost": 80000,
-    "stats": "/6/3/4+/3+",
+    "stats": "6/3/4+/3+/9+",
     "skills": "Cannoneer, Hail Mary Pass, Loner (4+), Pass, Secret Weapon, Sure Hands, Thick Skull",
     "playsFor": [
       "Old World Classic",
@@ -91,7 +91,7 @@
     "slug": "Bilerot_Vomitflesh",
     "name": "Bilerot Vomitflesh",
     "cost": 180000,
-    "stats": "/4/5/4+/6+",
+    "stats": "4/5/4+/6+/10+",
     "skills": "Dirty Player, Disturbing Presence, Foul Appearance, Lone Fouler, Loner (4+), Regeneration, Unsteady",
     "playsFor": [
       "Favoured of Nurgle"
@@ -110,7 +110,7 @@
     "slug": "Boa_Kon%27ssstriktr",
     "name": "Boa Kon'ssstriktr",
     "cost": 180000,
-    "stats": "/6/3/3+/4+",
+    "stats": "6/3/3+/4+/9+",
     "skills": "Dodge, Fend, Hypnotic Gaze, Loner (4+), Prehensile Tail, Safe Pair of Hands, Sidestep",
     "playsFor": [
       "Lustrian Superleague"
@@ -128,7 +128,7 @@
     "slug": "Bomber_Dribblesnot",
     "name": "Bomber Dribblesnot",
     "cost": 80000,
-    "stats": "/6/2/3+/3+",
+    "stats": "6/2/3+/3+/8+",
     "skills": "Accurate, Bombardier, Dodge, Loner (4+), Right Stuff, Sneaky Git, Stunty",
     "playsFor": [
       "Badlands Brawl",
@@ -153,7 +153,7 @@
     "slug": "Captain_Karina_von_Riesz",
     "name": "Captain Karina von Riesz",
     "cost": 230000,
-    "stats": "/7/4/2+/3+",
+    "stats": "7/4/2+/3+/9+",
     "skills": "Bloodlust (2+), Dodge, Hypnotic Gaze, Jump Up, Loner (4+), Regeneration",
     "playsFor": [
       "Sylvanian Spotlight"
@@ -173,7 +173,7 @@
     "slug": "Cindy_Piewhistle",
     "name": "Cindy Piewhistle",
     "cost": 100000,
-    "stats": "/5/2/3+/3+",
+    "stats": "5/2/3+/3+/7+",
     "skills": "Accurate, Bombardier, Dodge, Loner (4+), Secret Weapon, Stunty",
     "playsFor": [
       "Halfling Thimble Cup",
@@ -197,7 +197,7 @@
     "slug": "Count_Luthor_von_Drakenborg",
     "name": "Count Luthor von Drakenborg",
     "cost": 300000,
-    "stats": "/6/5/2+/3+",
+    "stats": "6/5/2+/3+/10+",
     "skills": "Block, Hypnotic Gaze, Loner (4+), Regeneration, Sidestep",
     "playsFor": [
       "Sylvanian Spotlight"
@@ -217,7 +217,7 @@
     "slug": "Deeproot_Strongbranch",
     "name": "Deeproot Strongbranch",
     "cost": 280000,
-    "stats": "/2/7/5+/4+",
+    "stats": "2/7/5+/4+/11+",
     "skills": "Block, Bullseye, Loner (4+), Mighty Blow, Stand Firm, Strong Arm, Thick Skull, Throw Team-mate, Timmm-ber!",
     "playsFor": [
       "Woodland League"
@@ -236,7 +236,7 @@
     "slug": "Dribl_and_Drull",
     "name": "Dribl and Drull",
     "cost": 0,
-    "stats": "8/2/3+/4+/8+",
+    "stats": "////",
     "skills": "Dirty Player, Dodge, Loner (4+), [Quick Flail], Sidestep, Sneaky Git, Stunty",
     "playsFor": [
       "Lustrian Superleague"
@@ -254,7 +254,7 @@
     "slug": "Eldril_Sidewinder",
     "name": "Eldril Sidewinder",
     "cost": 220000,
-    "stats": "/8/3/2+/3+",
+    "stats": "8/3/2+/3+/8+",
     "skills": "Catch, Dodge, Hypnotic Gaze, Loner (4+), Nerves of Steel, On the Ball",
     "playsFor": [
       "Elven Kingdoms League"
@@ -274,7 +274,7 @@
     "slug": "Estelle_la_Veneaux",
     "name": "Estelle la Veneaux",
     "cost": 190000,
-    "stats": "/6/3/3+/4+",
+    "stats": "6/3/3+/4+/8+",
     "skills": "Disturbing Presence, Dodge, Guard, Loner (4+), Sidestep",
     "playsFor": [
       "Lustrian Superleague"
@@ -292,7 +292,7 @@
     "slug": "Fungus_the_Loon",
     "name": "Fungus the Loon",
     "cost": 80000,
-    "stats": "/4/7/3+/-",
+    "stats": "4/7/3+/-/8+",
     "skills": "Ball & Chain, Loner (4+), Mighty Blow, No Ball, Secret Weapon, Stunty",
     "playsFor": [
       "Badlands Brawl",
@@ -317,7 +317,7 @@
     "slug": "Glart_Smashrip",
     "name": "Glart Smashrip",
     "cost": 175000,
-    "stats": "/5/4/4+/6+",
+    "stats": "5/4/4+/6+/9+",
     "skills": "Block, Claws, Grab, Juggernaut, Loner (4+), Stand Firm",
     "playsFor": [
       "Underworld Challenge"
@@ -337,7 +337,7 @@
     "slug": "Gloriel_Summerbloom",
     "name": "Gloriel Summerbloom",
     "cost": 150000,
-    "stats": "/7/2/2+/2+",
+    "stats": "7/2/2+/2+/8+",
     "skills": "Accurate, Dodge, Loner (3+), Pass, Sidestep, Sure Hands",
     "playsFor": [
       "Elven Kingdoms League"
@@ -357,7 +357,7 @@
     "slug": "Glotl_Stop",
     "name": "Glotl Stop",
     "cost": 260000,
-    "stats": "/6/6/5+/6+",
+    "stats": "6/6/5+/6+/10+",
     "skills": "Animal Savagery, Frenzy, Loner (4+), Mighty Blow, Prehensile Tail, Stand Firm, Thick Skull",
     "playsFor": [
       "Lustrian Superleague"
@@ -375,7 +375,7 @@
     "slug": "Grak_and_Crumbleberry",
     "name": "Grak and Crumbleberry",
     "cost": 0,
-    "stats": "5/5/4+/4+/10+",
+    "stats": "////",
     "skills": "Bone Head, Kick Team-mate, Loner (4+), Mighty Blow, Thick Skull",
     "playsFor": [
       "Any Team"
@@ -421,7 +421,7 @@
     "slug": "Grashnak_Blackhoof",
     "name": "Grashnak Blackhoof",
     "cost": 240000,
-    "stats": "/6/6/4+/6+",
+    "stats": "6/6/4+/6+/9+",
     "skills": "Frenzy, Horns, Loner (4+), Mighty Blow, Thick Skull, Unchannelled Fury",
     "playsFor": [
       "Chaos Clash"
@@ -443,7 +443,7 @@
     "slug": "Gretchen_W%C3%A4chter",
     "name": "Gretchen Wächter",
     "cost": 180000,
-    "stats": "/7/3/2+/-",
+    "stats": "7/3/2+/-/9+",
     "skills": "Disturbing Presence, Dodge, Foul Appearance, Jump Up, Loner (4+), No Ball, Regeneration, Shadowing, Sidestep",
     "playsFor": [
       "Sylvanian Spotlight"
@@ -463,7 +463,7 @@
     "slug": "Griff_Oberwald",
     "name": "Griff Oberwald",
     "cost": 300000,
-    "stats": "/7/4/2+/3+",
+    "stats": "7/4/2+/3+/9+",
     "skills": "Block, Dodge, Fend, Loner (3+), Sprint, Sure Feet",
     "playsFor": [
       "Old World Classic"
@@ -484,7 +484,7 @@
     "slug": "Grim_Ironjaw",
     "name": "Grim Ironjaw",
     "cost": 190000,
-    "stats": "/5/4/3+/6+",
+    "stats": "5/4/3+/6+/9+",
     "skills": "Block, Dauntless, Frenzy, Hatred (Big Guy), Loner (4+), Multiple Block, Thick Skull",
     "playsFor": [
       "Worlds Edge Superleague"
@@ -502,7 +502,7 @@
     "slug": "Grombrindal",
     "name": "Grombrindal",
     "cost": 170000,
-    "stats": "/5/3/3+/4+",
+    "stats": "5/3/3+/4+/10+",
     "skills": "Block, Break Tackle, Dauntless, Loner (4+), Mighty Blow, Stand Firm, Sure Feet, Thick Skull",
     "playsFor": [
       "Halfling Thimble Cup",
@@ -529,7 +529,7 @@
     "slug": "Guffle_Pusmaw",
     "name": "Guffle Pusmaw",
     "cost": 150000,
-    "stats": "/5/4/4+/6+",
+    "stats": "5/4/4+/6+/10+",
     "skills": "Foul Appearance, Loner (4+), Monstrous Mouth, Nerves of Steel, On the Ball, Plague Ridden",
     "playsFor": [
       "Favoured of Nurgle"
@@ -548,7 +548,7 @@
     "slug": "Hakflem_Skuttlespike",
     "name": "Hakflem Skuttlespike",
     "cost": 200000,
-    "stats": "/8/3/2+/3+",
+    "stats": "8/3/2+/3+/8+",
     "skills": "Dodge, Extra Arms, Loner (4+), Prehensile Tail, Two Heads",
     "playsFor": [
       "Underworld Challenge"
@@ -568,7 +568,7 @@
     "slug": "Helmut_Wulf",
     "name": "Helmut Wulf",
     "cost": 140000,
-    "stats": "/6/3/3+/-",
+    "stats": "6/3/3+/-/9+",
     "skills": "Chainsaw, Loner (4+), No Ball, Pro, Secret Weapon, Stand Firm",
     "playsFor": [
       "Old World Classic"
@@ -589,7 +589,7 @@
     "slug": "H%27thark_the_Unstoppable",
     "name": "H'thark the Unstoppable",
     "cost": 300000,
-    "stats": "/6/6/4+/6+",
+    "stats": "6/6/4+/6+/10+",
     "skills": "Block, Break Tackle, Defensive, Juggernaut, Loner (4+), Sprint, Sure Feet, Thick Skull, Unsteady",
     "playsFor": [
       "Badlands Brawl",
@@ -612,7 +612,7 @@
     "slug": "Ivan_%27the_Animal%27_Deathshroud",
     "name": "Ivan 'the Animal' Deathshroud",
     "cost": 210000,
-    "stats": "/6/4/4+/5+",
+    "stats": "6/4/4+/5+/9+",
     "skills": "Block, Disturbing Presence, Hatred (Dwarf), Juggernaut, Loner (4+), Regeneration, Strip Ball, Tackle",
     "playsFor": [
       "Sylvanian Spotlight"
@@ -632,7 +632,7 @@
     "slug": "Ivar_Eriksson",
     "name": "Ivar Eriksson",
     "cost": 215000,
-    "stats": "/6/4/3+/4+",
+    "stats": "6/4/3+/4+/9+",
     "skills": "Block, Guard, Loner (4+), Tackle",
     "playsFor": [
       "Old World Classic"
@@ -653,7 +653,7 @@
     "slug": "Jeremiah_Kool",
     "name": "Jeremiah Kool",
     "cost": 300000,
-    "stats": "/8/3/1+/2+",
+    "stats": "8/3/1+/2+/9+",
     "skills": "Block, Dodge, Diving Catch, Dump-off, Loner (4+), Nerves of Steel, On the Ball, Pass, Sidestep",
     "playsFor": [
       "Elven Kingdoms League"
@@ -668,7 +668,7 @@
     "slug": "Jordell_Freshbreeze",
     "name": "Jordell Freshbreeze",
     "cost": 280000,
-    "stats": "/8/3/1+/3+",
+    "stats": "8/3/1+/3+/8+",
     "skills": "Block, Diving Catch, Dodge, Leap, Loner (4+), Sidestep, Steady Footing",
     "playsFor": [
       "Elven Kingdoms League",
@@ -691,7 +691,7 @@
     "slug": "Josef_Bugman",
     "name": "Josef Bugman",
     "cost": 180000,
-    "stats": "/5/3/3+/4+",
+    "stats": "5/3/3+/4+/9+",
     "skills": "Block, Drunkard, Fend, Loner (3+), Tackle, Taunt, Thick Skull",
     "playsFor": [
       "Old World Classic",
@@ -715,7 +715,7 @@
     "slug": "Karla_von_Kill",
     "name": "Karla von Kill",
     "cost": 210000,
-    "stats": "/6/4/3+/3+",
+    "stats": "6/4/3+/3+/9+",
     "skills": "Block, Dauntless, Dodge, Jump Up, Loner (4+)",
     "playsFor": [
       "Lustrian Superleague",
@@ -739,7 +739,7 @@
     "slug": "Kiroth_Krakeneye",
     "name": "Kiroth Krakeneye",
     "cost": 160000,
-    "stats": "/7/3/2+/3+",
+    "stats": "7/3/2+/3+/8+",
     "skills": "Disturbing Presence, Foul Appearance, Loner (4+), On the Ball, Tackle, Tentacles",
     "playsFor": [
       "Elven Kingdoms League"
@@ -759,7 +759,7 @@
     "slug": "Kreek_Rustgouger",
     "name": "Kreek Rustgouger",
     "cost": 180000,
-    "stats": "/4/7/4+/-",
+    "stats": "4/7/4+/-/10+",
     "skills": "Ball & Chain, Loner (4+), Mighty Blow, No Ball, Prehensile Tail, Secret Weapon",
     "playsFor": [
       "Underworld Challenge"
@@ -779,7 +779,7 @@
     "slug": "Lord_Borak_the_Despoiler",
     "name": "Lord Borak the Despoiler",
     "cost": 270000,
-    "stats": "/5/5/3+/5+",
+    "stats": "5/5/3+/5+/10+",
     "skills": "Block, Dirty Player, Leader, Loner (3+), Mighty Blow, Put the Boot In, Sneaky Git",
     "playsFor": [
       "Chaos Clash"
@@ -801,7 +801,7 @@
     "slug": "Maple_Highgrove",
     "name": "Maple Highgrove",
     "cost": 210000,
-    "stats": "/3/5/5+/5+",
+    "stats": "3/5/5+/5+/11+",
     "skills": "Brawler, Grab, Loner (4+), Mighty Blow, Stand Firm, Tentacles, Thick Skull",
     "playsFor": [
       "Woodland League"
@@ -820,7 +820,7 @@
     "slug": "Max_Spleenripper",
     "name": "Max Spleenripper",
     "cost": 130000,
-    "stats": "/5/4/4+/-",
+    "stats": "5/4/4+/-/9+",
     "skills": "Chainsaw, Loner (4+), No Ball, Secret Weapon",
     "playsFor": [
       "Favoured of Khorne"
@@ -840,7 +840,7 @@
     "slug": "Morg_%27n%27_Thorg",
     "name": "Morg 'n' Thorg",
     "cost": 340000,
-    "stats": "/6/6/3+/4+",
+    "stats": "6/6/3+/4+/11+",
     "skills": "Block, Bullseye, Hatred (Undead), Loner (4+), Mighty Blow, Thick Skull, Throw Team-mate",
     "playsFor": [
       "Any team except those from Sylvanian Spotlight"
@@ -881,7 +881,7 @@
     "slug": "Nobbla_Blackwart",
     "name": "Nobbla Blackwart",
     "cost": 120000,
-    "stats": "/6/2/3+/-",
+    "stats": "6/2/3+/-/8+",
     "skills": "Block, Chainsaw, Dodge, Loner (4+), No Ball, Saboteur, Secret Weapon, Stunty",
     "playsFor": [
       "Badlands Brawl",
@@ -906,7 +906,7 @@
     "slug": "Puggy_Baconbreath",
     "name": "Puggy Baconbreath",
     "cost": 130000,
-    "stats": "/5/3/3+/3+",
+    "stats": "5/3/3+/3+/8+",
     "skills": "Block, Dodge, Loner (3+), Nerves of Steel, Right Stuff, Stunty",
     "playsFor": [
       "Halfling Thimble Cup",
@@ -930,7 +930,7 @@
     "slug": "Rashnak_Backstabber",
     "name": "Rashnak Backstabber",
     "cost": 130000,
-    "stats": "/7/3/3+/5+",
+    "stats": "7/3/3+/5+/8+",
     "skills": "Loner (4+), Shadowing, Sidestep, Sneaky Git, Stab",
     "playsFor": [
       "Badlands Brawl"
@@ -951,7 +951,7 @@
     "slug": "Ripper_Bolgrot",
     "name": "Ripper Bolgrot",
     "cost": 250000,
-    "stats": "/5/6/5+/4+",
+    "stats": "5/6/5+/4+/10+",
     "skills": "Bullseye, Grab, Loner (4+), Mighty Blow, Regeneration, Throw Team-mate",
     "playsFor": [
       "Badlands Brawl",
@@ -976,7 +976,7 @@
     "slug": "Rodney_Roachbait",
     "name": "Rodney Roachbait",
     "cost": 70000,
-    "stats": "/6/2/3+/4+",
+    "stats": "6/2/3+/4+/7+",
     "skills": "Catch, Diving Catch, Jump Up, Loner (4+), On the Ball, Sidestep, Stunty, Wrestle",
     "playsFor": [
       "Woodland League"
@@ -995,7 +995,7 @@
     "slug": "Rowana_Forestfoot",
     "name": "Rowana Forestfoot",
     "cost": 160000,
-    "stats": "/6/3/3+/4+",
+    "stats": "6/3/3+/4+/8+",
     "skills": "Dodge, Dump-off, Guard, Horns, Jump Up, Leap, Loner (4+)",
     "playsFor": [
       "Woodland League"
@@ -1014,7 +1014,7 @@
     "slug": "Roxanna_Darknail",
     "name": "Roxanna Darknail",
     "cost": 270000,
-    "stats": "/8/3/1+/3+",
+    "stats": "8/3/1+/3+/8+",
     "skills": "Dodge, Frenzy, Jump Up, Juggernaut, Leap, Loner (4+)",
     "playsFor": [
       "Elven Kingdoms League"
@@ -1034,7 +1034,7 @@
     "slug": "Rumbelow_Sheepskin",
     "name": "Rumbelow Sheepskin",
     "cost": 170000,
-    "stats": "/6/3/3+/5+",
+    "stats": "6/3/3+/5+/8+",
     "skills": "Block, Horns, Juggernaut, Loner (4+), Tackle, Thick Skull",
     "playsFor": [
       "Halfling Thimble Cup"
@@ -1052,7 +1052,7 @@
     "slug": "Scrappa_Sorehead",
     "name": "Scrappa Sorehead",
     "cost": 120000,
-    "stats": "/7/2/3+/4+",
+    "stats": "7/2/3+/4+/8+",
     "skills": "Dirty Player, Dodge, Loner (4+), Pogo, Right Stuff, Sprint, Stunty, Sure Feet",
     "playsFor": [
       "Badlands Brawl",
@@ -1077,7 +1077,7 @@
     "slug": "Scyla_Anfingrimm",
     "name": "Scyla Anfingrimm",
     "cost": 200000,
-    "stats": "/5/5/4+/6+",
+    "stats": "5/5/4+/6+/10+",
     "skills": "Claws, Frenzy, Loner (4+), Mighty Blow, Prehensile Tail, Thick Skull, Unchannelled Fury",
     "playsFor": [
       "Favoured of Khorne"
@@ -1097,7 +1097,7 @@
     "slug": "Skitter_Stab-stab",
     "name": "Skitter Stab-Stab",
     "cost": 170000,
-    "stats": "/9/2/2+/4+",
+    "stats": "9/2/2+/4+/8+",
     "skills": "Dodge, Loner (4+), Prehensile Tail, Shadowing, Stab",
     "playsFor": [
       "Underworld Challenge"
@@ -1117,7 +1117,7 @@
     "slug": "Skrorg_Snowpelt",
     "name": "Skrorg Snowpelt",
     "cost": 240000,
-    "stats": "/5/5/4+/6+",
+    "stats": "5/5/4+/6+/9+",
     "skills": "Block, Claws, Disturbing Presence, Juggernaut, Loner (4+), Mighty Blow",
     "playsFor": [
       "Old World Classic",
@@ -1142,7 +1142,7 @@
     "slug": "Skrull_Halfheight",
     "name": "Skrull Halfheight",
     "cost": 150000,
-    "stats": "/6/3/4+/3+",
+    "stats": "6/3/4+/3+/9+",
     "skills": "Accurate, Loner (4+), Nerves of Steel, Pass, Regeneration, Sure Hands, Thick Skull",
     "playsFor": [
       "Sylvanian Spotlight",
@@ -1165,7 +1165,7 @@
     "slug": "Swiftvine_Glimmershard",
     "name": "Swiftvine Glimmershard",
     "cost": 110000,
-    "stats": "/7/2/3+/5+",
+    "stats": "7/2/3+/5+/7+",
     "skills": "Disturbing Presence, Fend, Loner (4+), Sidestep, Stab, Stunty",
     "playsFor": [
       "Woodland League"
@@ -1184,7 +1184,7 @@
     "slug": "The_Black_Gobbo",
     "name": "The Black Gobbo",
     "cost": 210000,
-    "stats": "/6/2/3+/3+",
+    "stats": "6/2/3+/3+/8+",
     "skills": "Bombardier, Disturbing Presence, Dodge, Loner (3+), Sidestep, Sneaky Git, Stab",
     "playsFor": [
       "Badlands Brawl",
@@ -1209,7 +1209,7 @@
     "slug": "The_Mighty_Zug",
     "name": "The Mighty Zug",
     "cost": 220000,
-    "stats": "/5/5/4+/6+",
+    "stats": "5/5/4+/6+/10+",
     "skills": "Block, Loner (4+), Mighty Blow, Unsteady",
     "playsFor": [
       "Old World Classic",
@@ -1233,7 +1233,7 @@
     "slug": "The_Swift_Twins",
     "name": "The Swift Twins",
     "cost": 0,
-    "stats": "7/3/2+/3+/9+",
+    "stats": "////",
     "skills": "Block, Loner (4+), Mighty Blow, Tackle",
     "playsFor": [
       "Elven Kingdoms League"
@@ -1253,7 +1253,7 @@
     "slug": "Thorsson_Stoutmead",
     "name": "Thorsson Stoutmead",
     "cost": 170000,
-    "stats": "/6/3/4+/3+",
+    "stats": "6/3/4+/3+/8+",
     "skills": "Block, Drunkard, Loner (4+), Thick Skull",
     "playsFor": [
       "Old World Classic",
@@ -1277,7 +1277,7 @@
     "slug": "Varag_Ghoul-Chewer",
     "name": "Varag Ghoul-Chewer",
     "cost": 260000,
-    "stats": "/6/5/3+/5+",
+    "stats": "6/5/3+/5+/10+",
     "skills": "Block, Hatred (Undead), Jump Up, Loner (4+), Mighty Blow, Thick Skull, Unsteady",
     "playsFor": [
       "Badlands Brawl"
@@ -1298,7 +1298,7 @@
     "slug": "Wilhelm_Chaney",
     "name": "Wilhelm Chaney",
     "cost": 220000,
-    "stats": "/8/4/3+/4+",
+    "stats": "8/4/3+/4+/9+",
     "skills": "Catch, Claws, Frenzy, Loner (4+), Regeneration, Wrestle",
     "playsFor": [
       "Sylvanian Spotlight"
@@ -1318,7 +1318,7 @@
     "slug": "Willow_Rosebark",
     "name": "Willow Rosebark",
     "cost": 160000,
-    "stats": "/6/4/3+/5+",
+    "stats": "6/4/3+/5+/9+",
     "skills": "Dauntless, Loner (4+), Sidestep, Thick Skull",
     "playsFor": [
       "Woodland League"
@@ -1337,7 +1337,7 @@
     "slug": "Withergrasp_Doubledrool",
     "name": "Withergrasp Doubledrool",
     "cost": 170000,
-    "stats": "/6/3/3+/4+",
+    "stats": "6/3/3+/4+/9+",
     "skills": "Foul Appearance, Loner (4+), Prehensile Tail, Tackle, Tentacles, Two Heads, Wrestle",
     "playsFor": [
       "Favoured of Nurgle"
@@ -1356,7 +1356,7 @@
     "slug": "Zolcath_the_Zoat",
     "name": "Zolcath the Zoat",
     "cost": 220000,
-    "stats": "/5/5/4+/5+",
+    "stats": "5/5/4+/5+/10+",
     "skills": "Disturbing Presence, Juggernaut, Loner (4+), Mighty Blow, Prehensile Tail, Regeneration, Sure Feet",
     "playsFor": [
       "Elven Kingdoms League",
@@ -1379,7 +1379,7 @@
     "slug": "Zzharg_Madeye",
     "name": "Zzharg Madeye",
     "cost": 130000,
-    "stats": "/4/4/4+/3+",
+    "stats": "4/4/4+/3+/10+",
     "skills": "Cannoneer, Hail Mary Pass, Loner (4+), Nerves of Steel, Secret Weapon, Thick Skull",
     "playsFor": [
       "Favoured of Hashut"

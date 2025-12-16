@@ -818,6 +818,23 @@ const TEAM_BACKGROUNDS = {
 
   const formatCost = (cost) => cost.toLocaleString() + " gp";
 
+  // Format stats display with labeled cells
+  const formatStatsDisplay = (statsString) => {
+    const stats = statsString.split('/');
+    const labels = ['MA', 'ST', 'AG', 'PA', 'AV'];
+    
+    return (
+      <div className="inline-flex border border-gray-400 rounded overflow-hidden mt-1">
+        {stats.map((stat, idx) => (
+          <div key={idx} className={`flex flex-col items-center bg-white px-1 py-0.5 min-w-[36px] ${idx > 0 ? 'border-l border-gray-400' : ''}`}>
+            <div className="text-[9px] font-bold text-gray-600 leading-none">{labels[idx]}</div>
+            <div className="text-xs font-bold text-gray-900 leading-none mt-0.5">{stat}</div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const getPositionCount = (posName) => purchasedPlayers.filter(p => p.n === posName).length;
 
   const getInducementsList = () => {
@@ -960,7 +977,7 @@ const TEAM_BACKGROUNDS = {
               </div>
             </div>
 
-            {purchasedPlayers.length === 0 ? (
+            {purchasedPlayers.length === 0 && hiredStarPlayers.length === 0 ? (
               <div className="text-center py-8">
                 <p className="text-gray-600 text-lg">No players in roster yet</p>
                 <button 
@@ -1781,9 +1798,7 @@ const TEAM_BACKGROUNDS = {
                               ({count}/{pos.m})
                             </span>
                           </div>
-                          <div className="text-gray-700 font-mono text-xs mt-0.5">
-                            {pos.s}
-                          </div>
+                          {formatStatsDisplay(pos.s)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
                             {pos.k || '-'}
                           </div>
@@ -1852,9 +1867,7 @@ const TEAM_BACKGROUNDS = {
                             <span className="text-gray-600 text-sm font-bold">#{idx + 1}</span>
                             <h3 className="text-lg font-bold text-blue-900 truncate">{player.n}</h3>
                           </div>
-                          <div className="text-gray-700 font-mono text-xs mt-0.5">
-                            {player.s}
-                          </div>
+                          {formatStatsDisplay(player.s)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
                             {player.k || '-'}
                           </div>
@@ -1905,9 +1918,7 @@ const TEAM_BACKGROUNDS = {
                                 <Star size={16} className="text-yellow-700 flex-shrink-0" />
                                 <h3 className="text-lg font-bold text-yellow-900 truncate">{player.name}</h3>
                               </div>
-                              <div className="text-yellow-800 font-mono text-xs mt-0.5">
-                                {player.stats}
-                              </div>
+                              {formatStatsDisplay(player.stats)}
                               <div className="text-yellow-700 text-xs mt-0.5 line-clamp-2">
                                 {player.skills}
                               </div>
