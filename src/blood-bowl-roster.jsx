@@ -1603,7 +1603,7 @@ const TEAM_BACKGROUNDS = {
                   backgroundSize: '24px 24px'
                 }}
               >
-                {Object.keys(T).sort().map(team => (
+                {TEAM_NAMES.map(team => (
                   <option key={team} value={team}>{team}</option>
                 ))}
               </select>
