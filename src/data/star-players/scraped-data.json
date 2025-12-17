@@ -146,7 +146,7 @@
     ],
     "specialRule": {
       "name": "Kaboom!",
-      "description": ""
+      "description": "Once per game, if an opposition player catches a bomb thrown by Bomber, you can choose to have it explode rather than the opposition player immediately attempting to throw it again."
     }
   },
   {

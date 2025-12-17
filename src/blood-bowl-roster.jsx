@@ -452,6 +452,9 @@ export default function BloodBowlRoster() {
   const [copied, setCopied] = useState(false);
   const [shorteningUrl, setShorteningUrl] = useState(false);
   const [shortenError, setShortenError] = useState(false);
+  const [showSpecialRuleModal, setShowSpecialRuleModal] = useState(false);
+  const [selectedSpecialRule, setSelectedSpecialRule] = useState(null);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   // Load team from URL on mount
   useEffect(() => {
@@ -706,12 +709,46 @@ const TEAM_BACKGROUNDS = {
     });
   }, [selectedTeam]);
 
+
   const handleTeamChange = (team) => {
     // Always reset roster when changing teams
     setSelectedTeam(team);
     setPurchasedPlayers([]);
     setInducements({Fans: 1}); // Start with 1 free dedicated fan
     setHiredStarPlayers([]); // Clear star players when changing teams
+  };
+
+  // Smart positioning for popover to keep it on screen
+  const calculatePopoverPosition = (clickEvent) => {
+    const rect = clickEvent.currentTarget.getBoundingClientRect();
+    const popoverWidth = 384; // max-w-sm in pixels
+    const popoverHeight = 300; // max height
+    
+    // Start positioned right below the element, very close
+    let top = rect.bottom + 2;
+    let left = rect.left;
+    
+    // Check if popover would go off right edge
+    if (left + popoverWidth > window.innerWidth) {
+      left = window.innerWidth - popoverWidth - 10;
+    }
+    
+    // Check if popover would go off bottom edge
+    if (top + popoverHeight > window.innerHeight) {
+      top = rect.top - popoverHeight - 2; // Position above instead, very close
+    }
+    
+    // Ensure it doesn't go off left edge
+    if (left < 10) {
+      left = 10;
+    }
+    
+    // Ensure it doesn't go off top edge
+    if (top < 10) {
+      top = 10;
+    }
+    
+    return { top, left };
   };
 
   const handlePlayModeChange = (mode) => {
@@ -1084,7 +1121,17 @@ const TEAM_BACKGROUNDS = {
                         </td>
                         <td className="p-1.5 text-yellow-700 text-xs border border-yellow-300">
                           {player.specialRule?.name && (
-                            <strong>{player.specialRule.name}</strong>
+                            <strong
+                              className="cursor-pointer hover:text-yellow-900 hover:underline"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setModalPosition(calculatePopoverPosition(e));
+                                setSelectedSpecialRule(player.specialRule);
+                                setShowSpecialRuleModal(true);
+                              }}
+                            >
+                              {player.specialRule.name}
+                            </strong>
                           )}
                         </td>
                         <td className="p-1.5 text-center border border-yellow-300">
@@ -1353,6 +1400,40 @@ const TEAM_BACKGROUNDS = {
             </div>
           </div>
         )}
+
+
+        {/* Special Rule Popover */}
+        {showSpecialRuleModal && selectedSpecialRule && (
+          <>
+            {/* Invisible backdrop to catch clicks */}
+            <div 
+              className="fixed inset-0 z-[9998]" 
+              onClick={() => setShowSpecialRuleModal(false)}
+            />
+            
+            {/* Popover bubble */}
+            <div 
+              className="fixed z-[9999] bg-yellow-50 rounded-lg shadow-2xl border-2 border-yellow-400 p-3 max-w-sm"
+              style={{
+                top: `${modalPosition.top}px`,
+                left: `${modalPosition.left}px`,
+                maxHeight: '300px',
+                overflowY: 'auto'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-2 mb-2">
+                <Star size={16} className="text-yellow-600 flex-shrink-0 mt-0.5" />
+                <h3 className="text-base font-bold text-yellow-900 leading-tight">
+                  {selectedSpecialRule.name}
+                </h3>
+              </div>
+              <p className="text-sm text-gray-800 leading-relaxed">
+                {selectedSpecialRule.description}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     );
   }
@@ -1529,7 +1610,15 @@ const TEAM_BACKGROUNDS = {
                       <td className="p-2 text-sm">
                         {player.skills}
                         {player.specialRule?.name && (
-                          <div className="font-bold mt-1">
+                          <div
+                            className="font-bold mt-1 cursor-pointer hover:underline"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setModalPosition(calculatePopoverPosition(e));
+                              setSelectedSpecialRule(player.specialRule);
+                              setShowSpecialRuleModal(true);
+                            }}
+                          >
                             {player.specialRule.name}
                           </div>
                         )}
@@ -1564,6 +1653,39 @@ const TEAM_BACKGROUNDS = {
             </div>
           </div>
         </div>
+
+        {/* Special Rule Popover */}
+        {showSpecialRuleModal && selectedSpecialRule && (
+          <>
+            {/* Invisible backdrop to catch clicks */}
+            <div 
+              className="fixed inset-0 z-[9998]" 
+              onClick={() => setShowSpecialRuleModal(false)}
+            />
+            
+            {/* Popover bubble */}
+            <div 
+              className="fixed z-[9999] bg-yellow-50 rounded-lg shadow-2xl border-2 border-yellow-400 p-3 max-w-sm"
+              style={{
+                top: `${modalPosition.top}px`,
+                left: `${modalPosition.left}px`,
+                maxHeight: '300px',
+                overflowY: 'auto'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-2 mb-2">
+                <Star size={16} className="text-yellow-600 flex-shrink-0 mt-0.5" />
+                <h3 className="text-base font-bold text-yellow-900 leading-tight">
+                  {selectedSpecialRule.name}
+                </h3>
+              </div>
+              <p className="text-sm text-gray-800 leading-relaxed">
+                {selectedSpecialRule.description}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     );
   }
@@ -1921,7 +2043,15 @@ const TEAM_BACKGROUNDS = {
                                 {player.skills}
                               </div>
                               {player.specialRule && player.specialRule.name && (
-                                <div className="text-yellow-700 text-xs mt-1 pt-1 border-t border-yellow-300">
+                                <div
+                                  className="text-yellow-700 text-xs mt-1 pt-1 border-t border-yellow-300 cursor-pointer hover:text-yellow-900 hover:underline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setModalPosition(calculatePopoverPosition(e));
+                                    setSelectedSpecialRule(player.specialRule);
+                                    setShowSpecialRuleModal(true);
+                                  }}
+                                >
                                   <strong>{player.specialRule.name}</strong>
                                 </div>
                               )}
@@ -2078,7 +2208,7 @@ const TEAM_BACKGROUNDS = {
                                     <Star size={16} className="flex-shrink-0" />
                                     {sp.name}
                                   </h4>
-                                  <div className="text-xs text-green-800 font-mono">{sp.stats}</div>
+                                  {formatStatsDisplay(sp.stats)}
                                 </div>
                                 <div className="text-right flex-shrink-0">
                                   <div className="text-green-800 font-bold text-sm">{formatCost(sp.cost)}</div>
@@ -2091,7 +2221,15 @@ const TEAM_BACKGROUNDS = {
                                 </div>
                               </div>
                               {sp.specialRule && sp.specialRule.name && (
-                                <div className="text-xs text-green-800 mt-1 pt-1 border-t border-green-300">
+                                <div
+                                  className="text-xs text-green-800 mt-1 pt-1 border-t border-green-300 cursor-pointer hover:text-green-900 hover:underline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setModalPosition(calculatePopoverPosition(e));
+                                    setSelectedSpecialRule(sp.specialRule);
+                                    setShowSpecialRuleModal(true);
+                                  }}
+                                >
                                   <strong>{sp.specialRule.name}:</strong> {sp.specialRule.description?.substring(0, 80)}...
                                 </div>
                               )}
@@ -2122,7 +2260,7 @@ const TEAM_BACKGROUNDS = {
                               <div className="flex justify-between items-start gap-2">
                                 <div className="flex-1 min-w-0">
                                   <h4 className="text-base font-bold text-blue-900 truncate">{sp.name}</h4>
-                                  <div className="text-xs text-blue-800 font-mono">{sp.stats}</div>
+                                  {formatStatsDisplay(sp.stats)}
                                   <div className="text-xs text-blue-700 mt-1">{sp.skills?.substring(0, 60)}...</div>
                                 </div>
                                 <div className="text-right flex-shrink-0">
@@ -2141,8 +2279,16 @@ const TEAM_BACKGROUNDS = {
                                 </div>
                               </div>
                               {sp.specialRule && sp.specialRule.name && (
-                                <div className="text-xs text-blue-700 mt-1 pt-1 border-t border-blue-300">
-                                  <strong>{sp.specialRule.name}</strong>
+                                <div
+                                  className="text-xs text-blue-700 mt-1 pt-1 border-t border-blue-300 cursor-pointer hover:text-blue-900 hover:underline"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setModalPosition(calculatePopoverPosition(e));
+                                    setSelectedSpecialRule(sp.specialRule);
+                                    setShowSpecialRuleModal(true);
+                                  }}
+                                >
+                                  <strong>{sp.specialRule.name}:</strong> {sp.specialRule.description.substring(0, 60)}...
                                 </div>
                               )}
                             </div>
@@ -2180,6 +2326,39 @@ const TEAM_BACKGROUNDS = {
         )}
 
         </div>{/* End wrapper for spacing */}
+
+        {/* Special Rule Popover */}
+        {showSpecialRuleModal && selectedSpecialRule && (
+          <>
+            {/* Invisible backdrop to catch clicks */}
+            <div 
+              className="fixed inset-0 z-[9998]" 
+              onClick={() => setShowSpecialRuleModal(false)}
+            />
+            
+            {/* Popover bubble */}
+            <div 
+              className="fixed z-[9999] bg-yellow-50 rounded-lg shadow-2xl border-2 border-yellow-400 p-3 max-w-sm"
+              style={{
+                top: `${modalPosition.top}px`,
+                left: `${modalPosition.left}px`,
+                maxHeight: '300px',
+                overflowY: 'auto'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-2 mb-2">
+                <Star size={16} className="text-yellow-600 flex-shrink-0 mt-0.5" />
+                <h3 className="text-base font-bold text-yellow-900 leading-tight">
+                  {selectedSpecialRule.name}
+                </h3>
+              </div>
+              <p className="text-sm text-gray-800 leading-relaxed">
+                {selectedSpecialRule.description}
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
