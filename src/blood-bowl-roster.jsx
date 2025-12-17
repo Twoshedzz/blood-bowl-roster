@@ -320,7 +320,7 @@ const TEAM_BACKGROUNDS = {
 
   const totalSpent = useMemo(() => {
     let cost = 0;
-    purchasedPlayers.forEach(p => cost += p.c);
+    purchasedPlayers.forEach(p => cost += p.cost);
     const rerollCount = inducements["Rerolls"] || 0;
     cost += rerollCount * teamData.rerollCost;
     INDUCEMENTS.forEach(ind => {
@@ -355,7 +355,7 @@ const TEAM_BACKGROUNDS = {
   const calcTotalSpentFrom = (players, indState) => {
     let cost = 0;
     players.forEach((p) => {
-      cost += p.c;
+      cost += p.cost;
     });
 
     const rerollCount = indState["Rerolls"] || 0;
@@ -626,7 +626,7 @@ const TEAM_BACKGROUNDS = {
     );
   };
 
-  const getPositionCount = (posName) => purchasedPlayers.filter(p => p.n === posName).length;
+  const getPositionCount = (posName) => purchasedPlayers.filter(p => p.name === posName).length;
 
   const getInducementsList = () => {
     const list = [];
