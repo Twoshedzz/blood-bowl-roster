@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft, Share2, Check, Star } from 'lucide-react';
 import { getAvailableStarPlayers } from './data/star-players/index';
+import { TEAMS, TEAM_NAMES } from './data/teams/index';
 
 const STARTING_TREASURY = 1000000;
 const MAX_PLAYERS = 16;
