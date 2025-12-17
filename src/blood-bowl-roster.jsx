@@ -1345,15 +1345,15 @@ const TEAM_BACKGROUNDS = {
                       <td className="p-2 font-semibold">{player.name}</td>
                       <td className="p-2 font-mono text-sm">{player.stats}</td>
                       <td className="p-2 text-sm">
-                        {player.k || '-'}
+                        {player.skills || '-'}
                         {allAddedSkills.length > 0 && (
                           <span className="font-bold">
-                            {player.k ? ', ' : ''}
+                            {player.skills ? ', ' : ''}
                             {allAddedSkills.join(', ')}
                           </span>
                         )}
                       </td>
-                      <td className="p-2 text-right">{formatCost(player.c)}</td>
+                      <td className="p-2 text-right">{formatCost(player.cost)}</td>
                     </tr>
                     );
                   })}
@@ -1745,11 +1745,11 @@ const TEAM_BACKGROUNDS = {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-gray-600 text-sm font-bold">#{idx + 1}</span>
-                            <h3 className="text-lg font-bold text-blue-900 truncate">{player.n}</h3>
+                            <h3 className="text-lg font-bold text-blue-900 truncate">{player.name}</h3>
                           </div>
-                          {formatStatsDisplay(player.s)}
+                          {formatStatsDisplay(player.stats)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {player.k || '-'}
+                            {player.skills || '-'}
                           </div>
                           {hasAddedSkills && (
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -1767,7 +1767,7 @@ const TEAM_BACKGROUNDS = {
                           )}
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.c)}</div>
+                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.cost)}</div>
                           <button
                             onClick={() => removePlayer(player.id)}
                             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"
