@@ -527,11 +527,9 @@ const TEAM_BACKGROUNDS = {
     if (!skillsString || viewMode === 'print') return skillsString || '-';
     
     const skills = skillsString.split(',').map(s => s.trim());
-    console.log('Rendering skills:', skills, 'viewMode:', viewMode);
     
     return skills.map((skillName, idx) => {
       const skill = getSkill(skillName);
-      console.log('Skill lookup for', skillName, ':', skill ? 'Found' : 'Not found');
       return (
         <span key={idx}>
           {idx > 0 && ', '}
