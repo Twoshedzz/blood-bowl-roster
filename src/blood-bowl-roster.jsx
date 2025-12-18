@@ -2013,6 +2013,9 @@ const TEAM_BACKGROUNDS = {
                                     {sp.name}
                                   </h4>
                                   {formatStatsDisplay(sp.stats)}
+                                  <div className="text-xs text-green-800 mt-1">
+                                    {renderClickableSkills(sp.skills, viewMode)}
+                                  </div>
                                 </div>
                                 <div className="text-right flex-shrink-0">
                                   <div className="text-green-800 font-bold text-sm">{formatCost(sp.cost)}</div>
@@ -2065,7 +2068,9 @@ const TEAM_BACKGROUNDS = {
                                 <div className="flex-1 min-w-0">
                                   <h4 className="text-base font-bold text-blue-900 truncate">{sp.name}</h4>
                                   {formatStatsDisplay(sp.stats)}
-                                  <div className="text-xs text-blue-700 mt-1">{sp.skills?.substring(0, 60)}...</div>
+                                  <div className="text-xs text-blue-700 mt-1">
+                                    {renderClickableSkills(sp.skills, viewMode)}
+                                  </div>
                                 </div>
                                 <div className="text-right flex-shrink-0">
                                   <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(sp.cost)}</div>
