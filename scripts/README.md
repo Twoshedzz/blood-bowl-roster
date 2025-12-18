@@ -68,3 +68,4 @@ If the scraper fails or returns incomplete data:
   "specialRule": "Consummate Professional: Once per game..."
 }
 ```
+

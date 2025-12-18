@@ -76,3 +76,4 @@ export function canTeamHireStarPlayer(teamName, starPlayerName) {
   const available = getAvailableStarPlayers(teamName);
   return available.some(p => p.name === starPlayerName);
 }
+

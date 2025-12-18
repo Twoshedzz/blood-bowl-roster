@@ -67,3 +67,4 @@ async function debugPageStructure() {
 }
 
 debugPageStructure();
+

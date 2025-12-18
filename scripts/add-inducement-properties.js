@@ -114,3 +114,4 @@ for (const [teamName, props] of Object.entries(inducementProperties)) {
 }
 
 console.log('\n🎉 All team files updated with inducement properties!');
+
