@@ -1724,7 +1724,7 @@ const TEAM_BACKGROUNDS = {
                           </div>
                           {formatStatsDisplay(pos.stats)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {pos.skills || '-'}
+                            {renderClickableSkills(pos.skills, viewMode)}
                           </div>
                         </div>
                         <div className="text-right flex-shrink-0">
