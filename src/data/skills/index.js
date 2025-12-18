@@ -5,15 +5,17 @@ import { GENERAL_SKILLS } from './general.js';
 import { MUTATION_SKILLS } from './mutation.js';
 import { PASSING_SKILLS } from './passing.js';
 import { STRENGTH_SKILLS } from './strength.js';
+import { COMMON_TRAITS } from './traits.js';
 
-// Combine all skills into a single object for easy lookup
+// Combine all skills AND traits into a single object for easy lookup
 export const ALL_SKILLS = {
   ...AGILITY_SKILLS,
   ...DEVIOUS_SKILLS,
   ...GENERAL_SKILLS,
   ...MUTATION_SKILLS,
   ...PASSING_SKILLS,
-  ...STRENGTH_SKILLS
+  ...STRENGTH_SKILLS,
+  ...COMMON_TRAITS
 };
 
 // Export category-specific skills
