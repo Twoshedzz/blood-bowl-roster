@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, Minus, Trash2, Eye, Printer, ArrowLeft, Share2, Check, Star } from 'lucide-react';
 import { getAvailableStarPlayers } from './data/star-players/index';
 import { TEAMS, TEAM_NAMES } from './data/teams/index';
+import { ALL_SKILLS, getSkill } from './data/skills/index';
 
 const STARTING_TREASURY = 1000000;
 const MAX_PLAYERS = 16;
@@ -211,6 +212,9 @@ export default function BloodBowlRoster() {
   const [showSpecialRuleModal, setShowSpecialRuleModal] = useState(false);
   const [selectedSpecialRule, setSelectedSpecialRule] = useState(null);
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [showSkillPopover, setShowSkillPopover] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState(null);
+  const [skillPopoverPosition, setSkillPopoverPosition] = useState({ top: 0, left: 0 });
 
   // Load team from URL on mount
   useEffect(() => {
@@ -505,6 +509,43 @@ const TEAM_BACKGROUNDS = {
     }
     
     return { top, left };
+  };
+
+  // Handle skill click to show popover
+  const handleSkillClick = (e, skillName) => {
+    e.stopPropagation();
+    const skill = getSkill(skillName);
+    if (skill) {
+      setSkillPopoverPosition(calculatePopoverPosition(e));
+      setSelectedSkill(skill);
+      setShowSkillPopover(true);
+    }
+  };
+
+  // Helper function to render a comma-separated list of clickable skills
+  const renderClickableSkills = (skillsString, viewMode) => {
+    if (!skillsString || viewMode === 'print') return skillsString || '-';
+    
+    const skills = skillsString.split(',').map(s => s.trim());
+    return skills.map((skillName, idx) => {
+      const skill = getSkill(skillName);
+      return (
+        <span key={idx}>
+          {idx > 0 && ', '}
+          {skill ? (
+            <span
+              onClick={(e) => handleSkillClick(e, skillName)}
+              className="cursor-pointer hover:text-blue-600 hover:underline transition-colors"
+              title="Click to view skill details"
+            >
+              {skillName}
+            </span>
+          ) : (
+            skillName
+          )}
+        </span>
+      );
+    });
   };
 
   const handlePlayModeChange = (mode) => {
@@ -2116,6 +2157,52 @@ const TEAM_BACKGROUNDS = {
               <p className="text-sm text-gray-800 leading-relaxed">
                 {selectedSpecialRule.description}
               </p>
+            </div>
+          </>
+        )}
+
+        {/* Skill Popover - Global across all views */}
+        {showSkillPopover && selectedSkill && (
+          <>
+            {/* Invisible backdrop to catch clicks */}
+            <div
+              className="fixed inset-0 z-[9998]"
+              onClick={() => setShowSkillPopover(false)}
+            />
+
+            {/* Popover bubble */}
+            <div
+              className="fixed z-[9999] bg-blue-50 rounded-lg shadow-2xl border-2 border-blue-400 p-3 max-w-md"
+              style={{
+                top: `${skillPopoverPosition.top}px`,
+                left: `${skillPopoverPosition.left}px`,
+                maxHeight: '400px',
+                overflowY: 'auto'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-2 mb-2">
+                <div className="flex-shrink-0">
+                  <span className="inline-block px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded">
+                    {selectedSkill.category}
+                  </span>
+                  <span className="inline-block ml-1 px-2 py-1 bg-gray-200 text-gray-700 text-xs font-semibold rounded">
+                    {selectedSkill.type}
+                    {selectedSkill.mandatory && ' *'}
+                  </span>
+                </div>
+              </div>
+              <h3 className="text-lg font-bold text-blue-900 leading-tight mb-2">
+                {selectedSkill.name}
+              </h3>
+              <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {selectedSkill.description}
+              </p>
+              {selectedSkill.mandatory && (
+                <p className="text-xs text-red-600 mt-2 italic">
+                  * This skill is mandatory and must be used when applicable
+                </p>
+              )}
             </div>
           </>
         )}
