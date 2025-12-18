@@ -132,3 +132,4 @@ Once data is scraped and cleaned:
 Check the detailed documentation:
 - `scripts/README.md` - Scraper documentation
 - `src/data/star-players/star-players-structure.md` - Data structure details
+

@@ -18,7 +18,220 @@ const SKILLS_BY_CATEGORY = {
 
 // Position skill access is now stored in each team's position data (skillAccess property)
 // No longer need POSITION_SKILL_ACCESS - data is in src/data/teams/*.js files
+  "Amazon": {
+    "Lino": { primary: ["G"], secondary: ["A", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["S"] },
+    "Blocker": { primary: ["G", "S"], secondary: ["A"] },
+  },
+  "Black Orc": {
+    "Goblin": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
+    "Black Orc": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Bretonnian": {
+    "Squire": { primary: ["G"], secondary: ["A", "S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Grail Knight": { primary: ["G", "S"], secondary: ["A"] },
+  },
+  "Chaos Chosen": {
+    "Beastman": { primary: ["G", "M"], secondary: ["A", "D", "P", "S"] },
+    "Chosen": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["M", "S"], secondary: ["A", "G", "P"] },
+    "Ogre": { primary: ["M", "S"], secondary: ["A", "G"] },
+    "Minotaur": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Chaos Dwarf": {
+    "Hobgoblin": { primary: ["D"], secondary: ["A", "G", "S"] },
+    "Stabba": { primary: ["D", "G"], secondary: ["A", "S"] },
+    "Blocker": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Flamer": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Bull Centaur": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Minotaur": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Chaos Renegade": {
+    "Lineman": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Goblin": { primary: ["A", "D", "M"], secondary: ["G", "P"] },
+    "Orc": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Skaven": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "DarkElf": { primary: ["A", "D", "G", "M"], secondary: ["S"] },
+    "Thrower": { primary: ["D", "G", "M", "P"], secondary: ["A", "S"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P", "M"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+    "Minotaur": { primary: ["S"], secondary: ["A", "G", "M"] },
+    "RatOgre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Dark Elf": {
+    "Lineman": { primary: ["A", "G"], secondary: ["D", "S"] },
+    "Runner": { primary: ["A", "G", "P"], secondary: ["D", "S"] },
+    "Assassin": { primary: ["A", "D"], secondary: ["G", "S"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Witch Elf": { primary: ["A", "G"], secondary: ["D", "S"] },
+  },
+  "Dwarf": {
+    "Lineman": { primary: ["D", "G"], secondary: ["S"] },
+    "Runner": { primary: ["G", "P"], secondary: ["S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["P"] },
+    "Troll Slayer": { primary: ["G", "S"], secondary: ["D"] },
+    "Deathroller": { primary: ["D", "S"], secondary: ["G"] },
+  },
+  "Elf Union": {
+    "Lineman": { primary: ["A", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["S"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["P", "S"] },
+  },
+  "Gnome": {
+    "Lineman": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Illusionist": { primary: ["A", "P"], secondary: ["D", "G"] },
+    "Beastmaster": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Goblin": {
+    "Lineman": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
+    "Loony": { primary: ["D"], secondary: ["A", "G", "S"] },
+    "Bomma": { primary: ["D", "P"], secondary: ["A", "G", "S"] },
+    "Ooligan": { primary: ["A", "D"], secondary: ["G", "S"] },
+    "Doom Diver": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Fanatic": { primary: ["D", "S"], secondary: ["A", "G"] },
+    "Pogoer": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Halfling": {
+    "Lineman": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Hefty": { primary: ["A", "P"], secondary: ["D", "G", "S"] },
+    "Catcher": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Human": {
+    "Lineman": { primary: ["G"], secondary: ["A", "D", "S"] },
+    "Halfling": { primary: ["A"], secondary: ["D", "G", "S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Imperial Nobility": {
+    "Retainer": { primary: ["G"], secondary: ["A", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Bodyguard": { primary: ["G", "S"], secondary: ["A"] },
+    "Blitzer": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Khorne": {
+    "Marauder": { primary: ["G", "M"], secondary: ["A", "D", "S"] },
+    "Khorngor": { primary: ["G", "M", "S"], secondary: ["A", "D", "P"] },
+    "Bloodseeker": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Bloodspawn": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Lizardmen": {
+    "Skink": { primary: ["A"], secondary: ["G", "D", "P", "S"] },
+    "Chameleon": { primary: ["A", "P"], secondary: ["G", "D", "S"] },
+    "Saurus": { primary: ["G", "S"], secondary: ["A"] },
+    "Krox": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Necromantic Horror": {
+    "Zombie": { primary: ["D", "G"], secondary: ["A", "S"] },
+    "Ghoul": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Wraith": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Flesh Golem": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Werewolf": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+  },
+  "Norse": {
+    "Raider": { primary: ["G"], secondary: ["A", "P", "S"] },
+    "Berserker": { primary: ["G", "S"], secondary: ["A", "P"] },
+    "Valkyrie": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Ulfwerner": { primary: ["G", "S"], secondary: ["A"] },
+    "Yhetee": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Nurgle": {
+    "Rotter": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Pestigor": { primary: ["G", "M", "S"], secondary: ["A", "D", "P"] },
+    "Bloater": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Rotspawn": { primary: ["S"], secondary: ["D", "G", "M"] },
+  },
+  "Ogre": {
+    "Gnoblar": { primary: ["A", "D"], secondary: ["G"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "D", "G", "P"] },
+    "Punter": { primary: ["P", "S"], secondary: ["A", "D", "G"] },
+  },
+  "Old World Alliance": {
+    "Lineman": { primary: ["G"], secondary: ["A", "S"] },
+    "Halfling": { primary: ["A"], secondary: ["G", "S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Dwarf Blocker": { primary: ["D", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Runner": { primary: ["G", "P"], secondary: ["A", "S"] },
+    "Human Blitzer": { primary: ["G", "S"], secondary: ["A"] },
+    "Dwarf Blitzer": { primary: ["G", "S"], secondary: ["P"] },
+    "Troll Slayer": { primary: ["G", "S"], secondary: ["A"] },
+    "Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Orc": {
+    "Lineman": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Goblin": { primary: ["A", "D"], secondary: ["G", "P", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Big Un": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Shambling Undead": {
+    "Skeleton": { primary: ["G"], secondary: ["A", "D", "S"] },
+    "Zombie": { primary: ["D", "G"], secondary: ["A", "S"] },
+    "Ghoul": { primary: ["A", "G"], secondary: ["D", "P", "S"] },
+    "Wight": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Mummy": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Skaven": {
+    "Clanrat": { primary: ["D", "G"], secondary: ["A", "M", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "M", "S"] },
+    "Gutter": { primary: ["A", "D", "G"], secondary: ["M", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D", "M"] },
+    "Rat Ogre": { primary: ["S"], secondary: ["A", "G", "M"] },
+  },
+  "Snotling": {
+    "Lineman": { primary: ["A", "D"], secondary: ["G"] },
+    "Hoppa": { primary: ["A", "D"], secondary: ["G"] },
+    "Runna": { primary: ["A", "D"], secondary: ["G"] },
+    "Flinga": { primary: ["A", "D", "P"], secondary: ["G"] },
+    "Pump Wagon": { primary: ["D", "S"], secondary: ["A", "G"] },
+    "Troll": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+  "Tomb King": {
+    "Lineman": { primary: ["G"], secondary: ["A", "D", "S"] },
+    "Thrower": { primary: ["G", "P"], secondary: ["A", "D", "S"] },
+    "Blitzer": { primary: ["G", "S"], secondary: ["A", "D"] },
+    "Tomb Guardian": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Underworld Denizens": {
+    "Goblin": { primary: ["A", "D", "M"], secondary: ["G", "P", "S"] },
+    "Snotling": { primary: ["A", "D", "M"], secondary: ["G"] },
+    "Clanrat": { primary: ["D", "G", "M"], secondary: ["A", "S"] },
+    "Thrower": { primary: ["G", "M", "P"], secondary: ["A", "D", "S"] },
+    "Gutter": { primary: ["A", "D", "G", "M"], secondary: ["S"] },
+    "Blitzer": { primary: ["G", "M", "S"], secondary: ["A", "D"] },
+    "Troll": { primary: ["M", "S"], secondary: ["A", "G", "P"] },
+    "Rat Ogre": { primary: ["M", "S"], secondary: ["A", "G"] },
+  },
+  "Vampire": {
+    "Thrall": { primary: ["G"], secondary: ["A", "S"] },
+    "Runner": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Blitzer": { primary: ["A", "G", "S"], secondary: [] },
+    "Vargheist": { primary: ["S"], secondary: ["A", "G"] },
+  },
+  "Wood Elf": {
+    "Lineman": { primary: ["A", "G"], secondary: ["S"] },
+    "Thrower": { primary: ["A", "G", "P"], secondary: ["S"] },
+    "Catcher": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Wardancer": { primary: ["A", "G"], secondary: ["P", "S"] },
+    "Treeman": { primary: ["S"], secondary: ["A", "G", "P"] },
+  },
+};
 
+// Miniature purchase links for each team
 const TEAM_MINIATURE_LINKS = {
   "Amazon": [
     { name: "Games Workshop", url: "https://www.games-workshop.com/fr-FR/blood-bowl-amazon-team-2022" },
@@ -320,7 +533,7 @@ const TEAM_BACKGROUNDS = {
 
   const totalSpent = useMemo(() => {
     let cost = 0;
-    purchasedPlayers.forEach(p => cost += p.cost);
+    purchasedPlayers.forEach(p => cost += p.c);
     const rerollCount = inducements["Rerolls"] || 0;
     cost += rerollCount * teamData.rerollCost;
     INDUCEMENTS.forEach(ind => {
@@ -355,7 +568,7 @@ const TEAM_BACKGROUNDS = {
   const calcTotalSpentFrom = (players, indState) => {
     let cost = 0;
     players.forEach((p) => {
-      cost += p.cost;
+      cost += p.c;
     });
 
     const rerollCount = indState["Rerolls"] || 0;
@@ -626,7 +839,7 @@ const TEAM_BACKGROUNDS = {
     );
   };
 
-  const getPositionCount = (posName) => purchasedPlayers.filter(p => p.name === posName).length;
+  const getPositionCount = (posName) => purchasedPlayers.filter(p => p.n === posName).length;
 
   const getInducementsList = () => {
     const list = [];
@@ -1345,15 +1558,15 @@ const TEAM_BACKGROUNDS = {
                       <td className="p-2 font-semibold">{player.name}</td>
                       <td className="p-2 font-mono text-sm">{player.stats}</td>
                       <td className="p-2 text-sm">
-                        {player.skills || '-'}
+                        {player.k || '-'}
                         {allAddedSkills.length > 0 && (
                           <span className="font-bold">
-                            {player.skills ? ', ' : ''}
+                            {player.k ? ', ' : ''}
                             {allAddedSkills.join(', ')}
                           </span>
                         )}
                       </td>
-                      <td className="p-2 text-right">{formatCost(player.cost)}</td>
+                      <td className="p-2 text-right">{formatCost(player.c)}</td>
                     </tr>
                     );
                   })}
@@ -1603,7 +1816,7 @@ const TEAM_BACKGROUNDS = {
                   backgroundSize: '24px 24px'
                 }}
               >
-                {TEAM_NAMES.map(team => (
+                {Object.keys(T).sort().map(team => (
                   <option key={team} value={team}>{team}</option>
                 ))}
               </select>
@@ -1745,11 +1958,11 @@ const TEAM_BACKGROUNDS = {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-gray-600 text-sm font-bold">#{idx + 1}</span>
-                            <h3 className="text-lg font-bold text-blue-900 truncate">{player.name}</h3>
+                            <h3 className="text-lg font-bold text-blue-900 truncate">{player.n}</h3>
                           </div>
-                          {formatStatsDisplay(player.stats)}
+                          {formatStatsDisplay(player.s)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {player.skills || '-'}
+                            {player.k || '-'}
                           </div>
                           {hasAddedSkills && (
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -1767,7 +1980,7 @@ const TEAM_BACKGROUNDS = {
                           )}
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.cost)}</div>
+                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.c)}</div>
                           <button
                             onClick={() => removePlayer(player.id)}
                             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"

@@ -81,3 +81,4 @@ canTeamHireStarPlayer(teamName, starPlayerName)
 - ⏳ Create index file with exports
 - ⏳ Add helper functions
 - ⏳ Integrate into roster builder UI
+
