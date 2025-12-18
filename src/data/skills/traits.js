@@ -101,8 +101,8 @@ export const COMMON_TRAITS = {
     description: "Once per game, when a player with this Trait causes a Casualty against an opposition player as a result of a Block Action, and that player suffers a Dead result on their Casualty Roll and is not saved by an Apothecary, you may immediately add one new Lineman player from your team's Team Roster to your Reserves Box. This may cause your team to have more than 16 players for the remainder of the game.\n\nDuring the Post-game Sequence, this player may be hired in the same manner as any Journeyman players.\n\nThis Trait cannot be used against Big Guy players, or any player with the Decay, Regeneration or Stunty Traits."
   },
   
-  "Pick-Me-Up": {
-    name: "Pick-Me-Up",
+  "Pick-me-up": {
+    name: "Pick-me-up",
     category: "Trait",
     type: "Active",
     description: "At the end of each of the opposition's Turns, roll a D6 for each Prone team-mate within 3 squares of one or more Standing players with this Trait. On a 5+, the Prone player may immediately stand up. Should a player with this Trait stand up as a result of a team-mate using this Trait, they may not also use this Trait during the same Turn."
