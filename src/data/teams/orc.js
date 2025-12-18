@@ -6,6 +6,7 @@ export const Orc = {
   cheapBribes: false,
   cheapMasterChef: false,
   hasApothecary: true,
+  hasTeamCaptain: true,
   image: "Orcs.png",
   
   positions: [

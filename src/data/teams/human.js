@@ -6,6 +6,7 @@ export const Human = {
   cheapBribes: false,
   cheapMasterChef: false,
   hasApothecary: true,
+  hasTeamCaptain: true,
   image: "Human.png",
   
   positions: [
