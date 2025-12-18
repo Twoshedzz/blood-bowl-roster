@@ -1198,7 +1198,7 @@ const TEAM_BACKGROUNDS = {
               
               <div className="mt-4 p-3 bg-blue-100 rounded border border-blue-300">
                 <p className="text-sm text-blue-900">
-                  <strong>💡 Tip:</strong> Anyone with this link can view and edit this team. The link contains all your team data, so no login is required!
+                  <strong>Tip:</strong> Anyone with this link can view and edit this team. The link contains all your team data, so no login is required!
                 </p>
               </div>
             </div>
