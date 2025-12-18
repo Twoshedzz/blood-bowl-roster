@@ -867,7 +867,9 @@ const TEAM_BACKGROUNDS = {
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[2]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[3]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[4]}</td>
-                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">{player.skills || '-'}</td>
+                          <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">
+                            {renderClickableSkills(player.skills, viewMode)}
+                          </td>
                           <td className="p-1.5 text-gray-700 text-xs border border-blue-200">
                             {allAddedSkills.length > 0 ? (
                               <div className="flex flex-wrap gap-1">
@@ -914,7 +916,7 @@ const TEAM_BACKGROUNDS = {
                           {player.stats}
                         </td>
                         <td className="p-1.5 text-yellow-700 text-xs border border-yellow-300 leading-tight">
-                          {player.skills}
+                          {renderClickableSkills(player.skills, viewMode)}
                         </td>
                         <td className="p-1.5 text-yellow-700 text-xs border border-yellow-300">
                           {player.specialRule?.name && (
@@ -1790,7 +1792,7 @@ const TEAM_BACKGROUNDS = {
                           </div>
                           {formatStatsDisplay(player.stats)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {player.skills || '-'}
+                            {renderClickableSkills(player.skills, viewMode)}
                           </div>
                           {hasAddedSkills && (
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -1841,7 +1843,7 @@ const TEAM_BACKGROUNDS = {
                               </div>
                               {formatStatsDisplay(player.stats)}
                               <div className="text-yellow-700 text-xs mt-0.5 line-clamp-2">
-                                {player.skills}
+                                {renderClickableSkills(player.skills, viewMode)}
                               </div>
                               {player.specialRule && player.specialRule.name && (
                                 <div
