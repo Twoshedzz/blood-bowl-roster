@@ -40,7 +40,7 @@ export const TEAMS = {
   "Chaos Renegade": ChaosRenegade,
   "Dark Elf": DarkElf,
   "Dwarf": Dwarf,
-  "Elf Union": ElfUnion,
+  "Elven Union": ElfUnion,
   "Gnome": Gnome,
   "Goblin": Goblin,
   "Halfling": Halfling,

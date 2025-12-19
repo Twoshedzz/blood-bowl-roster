@@ -1,5 +1,5 @@
 export const ElfUnion = {
-  name: "Elf Union",
+  name: "Elven Union",
   league: "Elven Kingdoms League",
   rerollCost: 50000,
 
