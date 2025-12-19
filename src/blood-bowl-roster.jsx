@@ -825,15 +825,15 @@ const TEAM_BACKGROUNDS = {
       `}</style>
 
         <div className="max-w-[1800px] mx-auto">
-          <div className="mb-3 flex gap-3">
-            <button 
+          <div className="mb-3 flex gap-3 items-center">
+            <button
               onClick={() => setViewMode('build')}
               className="px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg font-bold text-base flex items-center gap-2 transition-colors border border-blue-900"
             >
               <ArrowLeft size={18} />
               BACK
             </button>
-            <button 
+            <button
               onClick={() => setViewMode('view')}
               className="px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg font-bold text-base flex items-center gap-2 transition-colors border border-blue-900"
             >
@@ -842,10 +842,10 @@ const TEAM_BACKGROUNDS = {
             </button>
             <button 
               onClick={generateShareUrl}
-              className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white rounded-lg font-bold text-base flex items-center gap-2 transition-colors border border-blue-900"
+              className="text-blue-700 hover:text-blue-900 font-semibold text-base flex items-center gap-1 transition-colors underline ml-2"
             >
-              <Share2 size={18} />
-              SHARE
+              <Share2 size={16} />
+              Share
             </button>
           </div>
 
@@ -1832,20 +1832,20 @@ const TEAM_BACKGROUNDS = {
                   <h2 className="text-2xl font-bold text-blue-800 mb-2">PLAYERS ({purchasedPlayers.length})</h2>
                   <div className="text-sm text-blue-900 font-semibold">Team Value: {teamValue.toLocaleString()}</div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-3 items-center">
+                  <button 
+                    onClick={generateShareUrl}
+                    className="text-blue-700 hover:text-blue-900 font-semibold text-sm flex items-center gap-1 transition-colors underline"
+                  >
+                    <Share2 size={16} />
+                    Share
+                  </button>
                   <button 
                     onClick={() => setViewMode('roster')}
-                    className="px-4 py-3 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-base transition-colors border border-blue-900"
+                    className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-base transition-colors border border-blue-900 shadow-md"
                   >
                     <Eye size={18} className="inline mr-1" />
                     VIEW ROSTER
-                  </button>
-                  <button 
-                    onClick={generateShareUrl}
-                    className="px-4 py-3 bg-green-600 hover:bg-green-500 text-white rounded font-bold text-base transition-colors border border-blue-900"
-                  >
-                    <Share2 size={18} className="inline mr-1" />
-                    SHARE
                   </button>
                 </div>
               </div>
