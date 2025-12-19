@@ -79,7 +79,7 @@ export const Human = {
   ],
   
   miniatureLinks: [
-    { name: "Games Workshop", url: "https://www.games-workshop.com/en-US/Blood-Bowl-Human-Team-2020" },
+    { name: "Games Workshop", url: "https://www.warhammer.com/en-GB/shop/Reikland-Reavers-Blood-Bowl-Team-2020?queryID=c1c2a5d73686418e26dd6e2d293fe553" },
     { name: "Greebo Games", url: "https://greebo-games.com/" },
     { name: "Willy Miniatures", url: "http://willyminiatures.com/" }
   ]
