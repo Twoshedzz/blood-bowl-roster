@@ -260,13 +260,18 @@ export default function BloodBowlRoster() {
     setShorteningUrl(true);
     setShortenError(false);
     
-    // Try to shorten the URL
+    // Try to shorten the URL using TinyURL
     try {
-      const response = await fetch(`https://is.gd/create.php?format=json&url=${encodeURIComponent(longUrl)}`);
-      const data = await response.json();
+      const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
       
-      if (data.shorturl) {
-        setShareUrl(data.shorturl);
+      if (response.ok) {
+        const shortUrl = await response.text();
+        // TinyURL returns plain text, not JSON
+        if (shortUrl && shortUrl.startsWith('http')) {
+          setShareUrl(shortUrl);
+        } else {
+          setShortenError(true);
+        }
       } else {
         setShortenError(true);
       }
