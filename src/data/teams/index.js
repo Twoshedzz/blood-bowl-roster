@@ -37,7 +37,7 @@ export const TEAMS = {
   "Bretonnian": Bretonnian,
   "Chaos Chosen": ChaosChosen,
   "Chaos Dwarf": ChaosDwarf,
-  "Chaos Renegade": ChaosRenegade,
+  "Chaos Renegades": ChaosRenegade,
   "Dark Elf": DarkElf,
   "Dwarf": Dwarf,
   "Elven Union": ElfUnion,

@@ -1,5 +1,5 @@
 export const ChaosRenegade = {
-  name: "Chaos Renegade",
+  name: "Chaos Renegades",
   league: "Chaos Clash",
   rerollCost: 70000,
 
