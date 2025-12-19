@@ -300,6 +300,7 @@ const TEAM_BACKGROUNDS = {
   "Gnome": `${BASE_URL}images/Gnomes.png`,
   "Goblin": `${BASE_URL}images/Goblins.png`,
   "Halfling": `${BASE_URL}images/Halflings.png`,
+  "High Elf": `${BASE_URL}images/HighElf.png`,
   "Human": `${BASE_URL}images/Human.png`,
   "Imperial Nobility": `${BASE_URL}images/ImperialNobility.png`,
   "Khorne": `${BASE_URL}images/Khorne.png`,
