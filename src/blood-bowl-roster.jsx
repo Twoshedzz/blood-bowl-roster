@@ -842,7 +842,7 @@ const TEAM_BACKGROUNDS = {
             </button>
             <button 
               onClick={generateShareUrl}
-              className="text-blue-700 hover:text-blue-900 font-semibold text-base flex items-center gap-1 transition-colors underline ml-2"
+              className="text-blue-700 hover:text-blue-900 font-semibold text-base flex items-center gap-1 transition-colors underline ml-2 cursor-pointer"
             >
               <Share2 size={16} />
               Share
@@ -1835,7 +1835,7 @@ const TEAM_BACKGROUNDS = {
                 <div className="flex gap-3 items-center">
                   <button 
                     onClick={generateShareUrl}
-                    className="text-blue-700 hover:text-blue-900 font-semibold text-sm flex items-center gap-1 transition-colors underline"
+                    className="text-blue-700 hover:text-blue-900 font-semibold text-sm flex items-center gap-1 transition-colors underline cursor-pointer"
                   >
                     <Share2 size={16} />
                     Share
