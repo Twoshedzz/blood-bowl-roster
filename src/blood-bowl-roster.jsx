@@ -553,6 +553,7 @@ const TEAM_BACKGROUNDS = {
     setPlayMode(mode);
     if (mode === 'league') {
       setStartingTreasury(STARTING_TREASURY); // Lock to 1M in league mode
+      setHiredStarPlayers([]); // Clear star players when switching to league mode
     }
   };
 
