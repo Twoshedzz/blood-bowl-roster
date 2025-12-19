@@ -1,5 +1,5 @@
 export const TombKing = {
-  name: "Tomb King",
+  name: "Tomb Kings",
   league: "Sylvannian Spotlight",
   rerollCost: 60000,
 

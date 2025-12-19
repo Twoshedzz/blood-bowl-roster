@@ -57,7 +57,7 @@ export const TEAMS = {
   "Shambling Undead": ShamblingUndead,
   "Skaven": Skaven,
   "Snotling": Snotling,
-  "Tomb King": TombKing,
+  "Tomb Kings": TombKing,
   "Underworld Denizens": UnderworldDenizens,
   "Vampire": Vampire,
   "Wood Elf": WoodElf,
