@@ -278,17 +278,7 @@ export default function BloodBowlRoster() {
     }
   };
 
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
-// Team background images - using public folder (move images to public/images/)
+  // Team background images - using public folder (move images to public/images/)
 const BASE_URL = import.meta.env.BASE_URL;
 const TEAM_BACKGROUNDS = {
   "Amazon": `${BASE_URL}images/Amazon.png`,
@@ -744,9 +734,77 @@ const TEAM_BACKGROUNDS = {
     return list;
   };
 
-  // Roster Grid View Mode
-  if (viewMode === 'roster') {
-    return (
+  return (
+    <>
+      {/* Share Modal - Rendered at root level to work in all view modes */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowShareModal(false)}>
+          <div className="bg-blue-50 rounded-lg p-6 max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-blue-800 flex items-center gap-2">
+                <Share2 size={24} />
+                Share Your Team
+              </h2>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+
+            <p className="text-gray-700 mb-4">
+              Copy this link to share your <strong>{selectedTeam}</strong> team with others:
+            </p>
+
+            <div className="bg-white rounded border border-gray-300 p-3 mb-4 break-all text-sm font-mono">
+              {shorteningUrl ? (
+                <span className="text-gray-500">Shortening URL...</span>
+              ) : shortenError ? (
+                <span className="text-red-600">Failed to shorten URL. Using full URL.</span>
+              ) : null}
+              <div className="mt-2">{shareUrl}</div>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  } catch {
+                    alert('Failed to copy to clipboard. Please copy manually.');
+                  }
+                }}
+                className={`px-4 py-3 rounded font-bold text-lg flex items-center gap-2 ${
+                  copied 
+                    ? 'bg-green-600 text-white' 
+                    : 'bg-blue-600 hover:bg-blue-500 text-white'
+                }`}
+              >
+                {copied ? <Check size={20} /> : null}
+                {copied ? 'Copied!' : 'Copy Link'}
+              </button>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded font-bold text-lg"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="mt-4 p-3 bg-blue-100 rounded border border-blue-300">
+              <p className="text-sm text-blue-900">
+                <strong>Tip:</strong> Anyone with this link can view and edit this team. The link contains all your team data, so no login is required!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Roster Grid View Mode */}
+      {viewMode === 'roster' && (
       <div className="min-h-screen p-3" style={{ 
         background: 'linear-gradient(135deg, #F5EDE0 0%, #E8DDD0 50%, #DDD2C5 100%)',
       }}>
@@ -1197,85 +1255,6 @@ const TEAM_BACKGROUNDS = {
           );
         })()}
 
-        {/* Share Modal */}
-        {showShareModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={() => setShowShareModal(false)}>
-            <div className="bg-blue-50 rounded-lg p-6 max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-blue-800 flex items-center gap-2">
-                  <Share2 size={24} />
-                  Share Your Team
-                </h2>
-                <button
-                  onClick={() => setShowShareModal(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
-                >
-                  ×
-                </button>
-              </div>
-              
-              <p className="text-gray-700 mb-4">
-                Copy this link to share your <strong>{selectedTeam}</strong> team with others:
-              </p>
-              
-              {shorteningUrl && (
-                <div className="bg-blue-100 border-2 border-blue-300 rounded p-3 mb-4 text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-700"></div>
-                    <span className="text-blue-700 font-semibold">Creating short link...</span>
-                  </div>
-                </div>
-              )}
-              
-              <div className="bg-white border-2 border-blue-300 rounded p-3 mb-4 break-all font-mono text-sm">
-                {shareUrl}
-              </div>
-              
-              {shortenError && (
-                <div className="bg-yellow-100 border border-yellow-400 rounded p-2 mb-4 text-sm text-yellow-800">
-                  ⚠️ Couldn't create short link. Using full URL instead.
-                </div>
-              )}
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={copyToClipboard}
-                  className={`flex-1 px-4 py-3 rounded font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
-                    copied 
-                      ? 'bg-green-600 text-white' 
-                      : 'bg-blue-700 hover:bg-blue-600 text-white'
-                  }`}
-                >
-                  {copied ? (
-                    <>
-                      <Check size={20} />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Share2 size={20} />
-                      Copy to Clipboard
-                    </>
-                  )}
-                </button>
-                <button
-                  onClick={() => setShowShareModal(false)}
-                  className="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded font-bold text-lg"
-                >
-                  Close
-                </button>
-              </div>
-              
-              <div className="mt-4 p-3 bg-blue-100 rounded border border-blue-300">
-                <p className="text-sm text-blue-900">
-                  <strong>Tip:</strong> Anyone with this link can view and edit this team. The link contains all your team data, so no login is required!
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-
         {/* Special Rule Popover */}
         {showSpecialRuleModal && selectedSpecialRule && (
           <>
@@ -1309,12 +1288,10 @@ const TEAM_BACKGROUNDS = {
           </>
         )}
       </div>
-    );
-  }
+      )}
 
-  // Print View Mode
-  if (viewMode === 'view') {
-    return (
+      {/* Print View Mode */}
+      {viewMode === 'view' && (
       <div className="min-h-screen bg-white p-8">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Roboto+Condensed:wght@400;700&display=swap');
@@ -1566,10 +1543,10 @@ const TEAM_BACKGROUNDS = {
           </>
         )}
       </div>
-    );
-  }
+      )}
 
-  return (
+      {/* Build View Mode */}
+      {viewMode === 'build' && (
     <div className="min-h-screen p-0" style={{ 
       background: 'linear-gradient(135deg, #F5EDE0 0%, #E8DDD0 50%, #DDD2C5 100%)',
       fontFamily: '"Teko", "Bebas Neue", sans-serif'
@@ -2315,5 +2292,7 @@ const TEAM_BACKGROUNDS = {
         )}
       </div>
     </div>
+      )}
+    </>
   );
 }
