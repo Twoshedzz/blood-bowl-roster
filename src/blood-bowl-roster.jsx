@@ -215,7 +215,6 @@ export default function BloodBowlRoster() {
   const [showSkillPopover, setShowSkillPopover] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [skillPopoverPosition, setSkillPopoverPosition] = useState({ top: 0, left: 0 });
-  const [teamCaptainId, setTeamCaptainId] = useState(null); // ID of the player who is team captain
 
   // Load team from URL on mount
   useEffect(() => {
@@ -231,7 +230,6 @@ export default function BloodBowlRoster() {
         setStartingTreasury(decoded.treasury || STARTING_TREASURY);
         setPlayMode(decoded.playMode || 'league');
         setHiredStarPlayers(decoded.starPlayers || []); // Load star players from shared URL
-        setTeamCaptainId(decoded.teamCaptainId || null); // Load team captain
       } catch (e) {
         console.error('Failed to load team from URL:', e);
       }
@@ -247,8 +245,7 @@ export default function BloodBowlRoster() {
       skills: playerSkills,
       treasury: startingTreasury,
       playMode,
-      starPlayers: hiredStarPlayers, // Include star players in shared state
-      teamCaptainId: teamCaptainId // Include team captain
+      starPlayers: hiredStarPlayers // Include star players in shared state
     };
     const encoded = btoa(JSON.stringify(teamState));
     const longUrl = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
@@ -303,7 +300,6 @@ const TEAM_BACKGROUNDS = {
   "Gnome": `${BASE_URL}images/Gnomes.png`,
   "Goblin": `${BASE_URL}images/Goblins.png`,
   "Halfling": `${BASE_URL}images/Halflings.png`,
-  "High Elf": `${BASE_URL}images/HighElf.png`,
   "Human": `${BASE_URL}images/Human.png`,
   "Imperial Nobility": `${BASE_URL}images/ImperialNobility.png`,
   "Khorne": `${BASE_URL}images/Khorne.png`,
@@ -398,53 +394,6 @@ const TEAM_BACKGROUNDS = {
 
   const removePlayer = (playerId) => {
     setPurchasedPlayers(purchasedPlayers.filter(p => p.id !== playerId));
-    // If removing the team captain, clear captain status
-    if (teamCaptainId === playerId) {
-      setTeamCaptainId(null);
-    }
-  };
-
-  // Team Captain Management (Human and Orc only)
-  const canBeTeamCaptain = (player) => {
-    // Check if team has team captain rule
-    if (!teamData.hasTeamCaptain) return false;
-    
-    // Check if player is a Big Guy (has keywords indicating Big Guy status)
-    const isBigGuy = player.name.toLowerCase().includes('ogre') || 
-                     player.name.toLowerCase().includes('troll') || 
-                     player.name.toLowerCase().includes('minotaur') ||
-                     player.name.toLowerCase().includes('treeman');
-    
-    return !isBigGuy;
-  };
-
-  const setTeamCaptain = (playerId) => {
-    const player = purchasedPlayers.find(p => p.id === playerId);
-    if (player && canBeTeamCaptain(player)) {
-      setTeamCaptainId(playerId);
-    }
-  };
-
-  const clearTeamCaptain = () => {
-    setTeamCaptainId(null);
-  };
-
-  // Get player's skills including captain's Pro skill
-  const getPlayerSkills = (player) => {
-    let skills = player.skills || '-';
-    const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
-    const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
-    
-    // Add Pro skill if player is team captain
-    if (teamCaptainId === player.id && !skills.includes('Pro') && !allAddedSkills.includes('Pro')) {
-      if (skills === '-') {
-        skills = 'Pro';
-      } else {
-        skills = 'Pro, ' + skills;
-      }
-    }
-    
-    return { skills, addedSkills: allAddedSkills };
   };
 
   // Star Player Management (Tournament Mode Only)
@@ -520,6 +469,13 @@ const TEAM_BACKGROUNDS = {
     });
   }, [selectedTeam]);
 
+  // Reset inducements tab to 'inducements' when switching to league mode
+  useEffect(() => {
+    if (playMode === 'league') {
+      setInducementsTab('inducements');
+    }
+  }, [playMode]);
+
 
   const handleTeamChange = (team) => {
     // Always reset roster when changing teams
@@ -527,7 +483,6 @@ const TEAM_BACKGROUNDS = {
     setPurchasedPlayers([]);
     setInducements({Fans: 1}); // Start with 1 free dedicated fan
     setHiredStarPlayers([]); // Clear star players when changing teams
-    setTeamCaptainId(null); // Clear team captain when changing teams
   };
 
   // Smart positioning for popover to keep it on screen
@@ -614,7 +569,6 @@ const TEAM_BACKGROUNDS = {
     setInducements({Fans: 1}); // Start with 1 free dedicated fan
     setStartingTreasury(STARTING_TREASURY);
     setHiredStarPlayers([]); // Clear star players
-    setTeamCaptainId(null); // Clear team captain
   };
 
   const handleDragStart = (e, index) => {
@@ -898,10 +852,8 @@ const TEAM_BACKGROUNDS = {
                   <tbody>
                     {purchasedPlayers.map((player, idx) => {
                       const stats = player.stats.split('/');
-                      const { skills: playerSkillsDisplay } = getPlayerSkills(player);
                       const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
                       const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
-                      const isCaptain = teamCaptainId === player.id;
                       
                       return (
                         <tr 
@@ -913,24 +865,19 @@ const TEAM_BACKGROUNDS = {
                           className={`transition-colors cursor-move ${
                             draggedIndex === idx 
                               ? 'bg-yellow-200 opacity-50' 
-                              : isCaptain
-                              ? 'bg-yellow-50 hover:bg-yellow-100'
                               : 'bg-blue-100 hover:bg-blue-200'
                           }`}
                           style={{ userSelect: 'none' }}
                         >
                           <td className="p-1.5 text-blue-900 font-bold border border-blue-200 text-sm">{idx + 1}</td>
-                          <td className="p-1.5 text-blue-900 font-semibold border border-blue-200">
-                            {isCaptain && <span className="bg-yellow-600 text-white px-1 rounded text-xs font-bold mr-1">C</span>}
-                            {player.name}
-                          </td>
+                          <td className="p-1.5 text-blue-900 font-semibold border border-blue-200">{player.name}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[0]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[1]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[2]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[3]}</td>
                           <td className="p-1.5 text-center text-gray-700 font-mono border border-blue-200">{stats[4]}</td>
                           <td className="p-1.5 text-gray-700 text-xs border border-blue-200 leading-tight">
-                            {renderClickableSkills(playerSkillsDisplay, viewMode)}
+                            {renderClickableSkills(player.skills, viewMode)}
                           </td>
                           <td className="p-1.5 text-gray-700 text-xs border border-blue-200">
                             {allAddedSkills.length > 0 ? (
@@ -1441,24 +1388,19 @@ const TEAM_BACKGROUNDS = {
                 </thead>
                 <tbody>
                   {purchasedPlayers.map((player, idx) => {
-                    const { skills: playerSkillsDisplay } = getPlayerSkills(player);
                     const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
                     const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
-                    const isCaptain = teamCaptainId === player.id;
                     
                     return (
-                    <tr key={player.id} className={`border-b border-gray-400 ${isCaptain ? 'bg-yellow-50' : ''}`}>
+                    <tr key={player.id} className="border-b border-gray-400">
                       <td className="p-2">{idx + 1}</td>
-                      <td className="p-2 font-semibold">
-                        {isCaptain && <span className="bg-yellow-600 text-white px-1 rounded text-xs font-bold mr-1">C</span>}
-                        {player.name}
-                      </td>
+                      <td className="p-2 font-semibold">{player.name}</td>
                       <td className="p-2 font-mono text-sm">{player.stats}</td>
                       <td className="p-2 text-sm">
-                        {playerSkillsDisplay || '-'}
+                        {player.skills || '-'}
                         {allAddedSkills.length > 0 && (
                           <span className="font-bold">
-                            {playerSkillsDisplay && playerSkillsDisplay !== '-' ? ', ' : ''}
+                            {player.skills ? ', ' : ''}
                             {allAddedSkills.join(', ')}
                           </span>
                         )}
@@ -1846,26 +1788,20 @@ const TEAM_BACKGROUNDS = {
                 ) : (
                   <>
                   {purchasedPlayers.map((player, idx) => {
-                    const { skills: playerSkillsDisplay, addedSkills: allAddedSkills } = getPlayerSkills(player);
                     const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
                     const hasAddedSkills = addedSkills.primary.length > 0 || addedSkills.secondary.length > 0;
-                    const isCaptain = teamCaptainId === player.id;
-                    const canBeCaptain = teamData.hasTeamCaptain && canBeTeamCaptain(player);
                     
                     return (
-                    <div key={player.id} className={`rounded p-2 border transition-colors ${isCaptain ? 'bg-yellow-50 border-2 border-yellow-600' : 'bg-blue-100 border border-blue-200 hover:border-blue-600'}`}>
+                    <div key={player.id} className="bg-blue-100 rounded p-2 border border-blue-200 hover:border-blue-600 transition-colors">
                       <div className="flex justify-between items-start gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-gray-600 text-sm font-bold">#{idx + 1}</span>
-                            {isCaptain && (
-                              <span className="bg-yellow-600 text-white px-2 py-0.5 rounded text-xs font-bold">CAPTAIN</span>
-                            )}
                             <h3 className="text-lg font-bold text-blue-900 truncate">{player.name}</h3>
                           </div>
                           {formatStatsDisplay(player.stats)}
                           <div className="text-gray-600 text-xs mt-0.5 line-clamp-2">
-                            {renderClickableSkills(playerSkillsDisplay, viewMode)}
+                            {renderClickableSkills(player.skills, viewMode)}
                           </div>
                           {hasAddedSkills && (
                             <div className="mt-1 flex flex-wrap gap-1">
@@ -1882,26 +1818,8 @@ const TEAM_BACKGROUNDS = {
                             </div>
                           )}
                         </div>
-                        <div className="text-right flex-shrink-0 flex flex-col gap-1">
-                          <div className="text-blue-800 font-bold text-sm">{formatCost(player.cost)}</div>
-                          {canBeCaptain && !isCaptain && teamCaptainId === null && (
-                            <button
-                              onClick={() => setTeamCaptain(player.id)}
-                              className="px-2 py-1 bg-yellow-600 hover:bg-yellow-500 text-white rounded text-xs font-bold transition-all border border-yellow-800 whitespace-nowrap"
-                              title="Make Team Captain"
-                            >
-                              Make Captain
-                            </button>
-                          )}
-                          {isCaptain && (
-                            <button
-                              onClick={() => clearTeamCaptain()}
-                              className="px-2 py-1 bg-gray-600 hover:bg-gray-500 text-white rounded text-xs font-bold transition-all border border-gray-800"
-                              title="Remove Captain"
-                            >
-                              Remove Captain
-                            </button>
-                          )}
+                        <div className="text-right flex-shrink-0">
+                          <div className="text-blue-800 font-bold text-sm mb-1">{formatCost(player.cost)}</div>
                           <button
                             onClick={() => removePlayer(player.id)}
                             className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white rounded font-bold text-sm transition-all border border-red-800"
