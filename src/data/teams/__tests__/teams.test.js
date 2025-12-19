@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { TEAMS, TEAM_NAMES, getTeam, getPositionSkillAccess } from '../index';
 
 describe('Team Data Structure', () => {
-  it('should have 29 teams', () => {
-    expect(Object.keys(TEAMS)).toHaveLength(29);
+  it('should have 30 teams', () => {
+    expect(Object.keys(TEAMS)).toHaveLength(30);
   });
 
   it('should have all team names in alphabetical order', () => {

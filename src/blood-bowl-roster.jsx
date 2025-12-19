@@ -339,7 +339,7 @@ const TEAM_BACKGROUNDS = {
       hiredStarPlayers.forEach(sp => cost += sp.cost);
     }
     return cost;
-  }, [purchasedPlayers, inducements, teamData, hiredStarPlayers, playMode]);
+  }, [purchasedPlayers, inducements, teamData, hiredStarPlayers, playMode, INDUCEMENTS]);
 
   // Calculate team value (includes skill costs)
   const teamValue = useMemo(() => {
@@ -1412,7 +1412,7 @@ const TEAM_BACKGROUNDS = {
                   })}
                   
                   {/* Star Players in Print Mode - Tournament Only */}
-                  {playMode === 'tournament' && hiredStarPlayers.map((player, idx) => (
+                  {playMode === 'tournament' && hiredStarPlayers.map((player) => (
                     <tr key={player.id} className="border-b-2 border-yellow-500 bg-yellow-50">
                       <td className="p-2">
                         <Star size={14} className="inline mr-1" />
@@ -1843,7 +1843,7 @@ const TEAM_BACKGROUNDS = {
                           STAR PLAYERS
                         </div>
                       </div>
-                      {hiredStarPlayers.map((player, idx) => (
+                      {hiredStarPlayers.map((player) => (
                         <div key={player.id} className="bg-yellow-100 rounded p-2 border-2 border-yellow-500 hover:border-yellow-600 transition-colors">
                           <div className="flex justify-between items-start gap-2">
                             <div className="flex-1 min-w-0">

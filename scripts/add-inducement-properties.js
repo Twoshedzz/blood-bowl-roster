@@ -96,8 +96,6 @@ for (const [teamName, props] of Object.entries(inducementProperties)) {
   }
   
   const lines = content.split('\n');
-  const rerollLineContent = lines[rerollLine];
-  const commaPos = rerollLineContent.indexOf(',');
   
   // Insert the new properties after the rerollCost line
   const newProperties = `
