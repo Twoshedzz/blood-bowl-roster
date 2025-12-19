@@ -345,9 +345,10 @@ const TEAM_BACKGROUNDS = {
   }, [purchasedPlayers, inducements, teamData, hiredStarPlayers, playMode, INDUCEMENTS]);
 
   // Calculate team value (includes skill costs)
+  // Note: Team captain's Pro skill is NOT counted here as it's a free benefit, not a skill advancement
   const teamValue = useMemo(() => {
     let value = totalSpent;
-    // Add skill costs
+    // Add skill costs for manually added skills only
     purchasedPlayers.forEach(player => {
       const skills = playerSkills[player.id];
       if (skills) {
@@ -430,12 +431,13 @@ const TEAM_BACKGROUNDS = {
   };
 
   // Get player's skills including captain's Pro skill
+  // Note: Captain's Pro skill is free and doesn't add to TV - it's only added to display, not to playerSkills state
   const getPlayerSkills = (player) => {
     let skills = player.skills || '-';
     const addedSkills = playerSkills[player.id] || { primary: [], secondary: [] };
     const allAddedSkills = [...addedSkills.primary, ...addedSkills.secondary];
     
-    // Add Pro skill if player is team captain
+    // Add Pro skill if player is team captain (free benefit, doesn't count toward TV)
     if (teamCaptainId === player.id && !skills.includes('Pro') && !allAddedSkills.includes('Pro')) {
       if (skills === '-') {
         skills = 'Pro';
