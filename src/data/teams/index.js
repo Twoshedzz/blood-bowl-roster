@@ -11,7 +11,6 @@ import { ElfUnion } from './elf-union.js';
 import { Gnome } from './gnome.js';
 import { Goblin } from './goblin.js';
 import { Halfling } from './halfling.js';
-import { HighElf } from './high-elf.js';
 import { Human } from './human.js';
 import { ImperialNobility } from './imperial-nobility.js';
 import { Khorne } from './khorne.js';
@@ -45,7 +44,6 @@ export const TEAMS = {
   "Gnome": Gnome,
   "Goblin": Goblin,
   "Halfling": Halfling,
-  "High Elf": HighElf,
   "Human": Human,
   "Imperial Nobility": ImperialNobility,
   "Khorne": Khorne,
